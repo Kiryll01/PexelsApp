@@ -15,3 +15,11 @@ data class PexelsSearchResponse(
     @Json(name = "total_results")
     val totalResults: Int
 )
+
+@JsonClass(generateAdapter = true)
+data class PexelsCollectionsResponse(
+val pexelsCollection : List<PexelsCollectionItem>
+)
+data class PexelsCollectionItem(
+    val title : String
+)

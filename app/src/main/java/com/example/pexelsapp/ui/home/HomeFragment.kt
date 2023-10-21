@@ -9,9 +9,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pexelsapp.Adapters.ImageListAdapter
+import com.example.pexelsapp.Adapters.SearchKeyWordsAdapter
+import com.example.pexelsapp.Web.PexelsApiClient
 import com.example.pexelsapp.databinding.FragmentHomeBinding
+import kotlinx.coroutines.coroutineScope
+import kotlin.coroutines.coroutineContext
 
 class HomeFragment : Fragment() {
 
@@ -35,6 +41,10 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val adapter=ImageListAdapter()
         binding.apply {
+            searchTitlesRecyclerView.adapter=SearchKeyWordsAdapter(viewModel.collections)
+            val collectionsLayoutManager=LinearLayoutManager(requireContext())
+            collectionsLayoutManager.orientation=RecyclerView.HORIZONTAL
+            searchTitlesRecyclerView.layoutManager= collectionsLayoutManager
             imagesRecyclerView.adapter = adapter
             imagesRecyclerView.layoutManager=
                StaggeredGridLayoutManager( 2,

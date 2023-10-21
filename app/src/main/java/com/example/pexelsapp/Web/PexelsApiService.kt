@@ -1,7 +1,6 @@
 package com.example.pexelsapp.Web
 
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.addAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,6 +16,12 @@ interface PexelsApiService {
         @Query("per_page") perPage: Int = 30,
         @Query("page") page: Int = 1
     ): PexelsSearchResponse
+
+    @GET("collections/featured")
+    suspend fun getFeaturedCollections(
+        @Query("per_page") perPage: Int = 7,
+        @Query("page") page: Int = 1
+    ) : PexelsCollectionsResponse
 }
 
 
