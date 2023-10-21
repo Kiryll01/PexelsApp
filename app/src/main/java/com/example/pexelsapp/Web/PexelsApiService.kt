@@ -1,7 +1,7 @@
 package com.example.pexelsapp.Web
 
-import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.addAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -37,6 +37,7 @@ object PexelsApiClient {
 
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
+        .add(IntNullableAdapter())
         .build()
 
     private val retrofit = Retrofit.Builder()
