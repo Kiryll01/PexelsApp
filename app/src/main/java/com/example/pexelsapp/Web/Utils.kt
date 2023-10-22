@@ -1,6 +1,13 @@
 package com.example.pexelsapp.Web
 
+import android.widget.ImageView
 import androidx.annotation.Nullable
+import androidx.core.net.toUri
+import coil.load
+import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
+import com.example.pexelsapp.Data.Dtos.PexelsSize
+import com.example.pexelsapp.R
+import com.example.pexelsapp.databinding.ImageItemBinding
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.*
@@ -21,6 +28,15 @@ import com.squareup.moshi.*
 //    }
 //}
 //class StringListConverter : AbstractListConverter<String>()
+
+fun loadImage (imgUri : String, image : ImageView) {
+  val uri = imgUri
+        ?.let { it.toUri().buildUpon().scheme("https").build() }
+    image.load(uri) {
+        placeholder(R.drawable.loading_img)
+        error(R.drawable.icon_download_error)
+    }
+}
 
 
 @Retention(AnnotationRetention.RUNTIME)

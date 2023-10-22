@@ -4,6 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context="ui.details.DetailsFragment"
         android:padding="24dp">
 
 
@@ -24,10 +25,12 @@
             android:paddingRight="16dp"
             app:shapeAppearanceOverlay="@style/RoundedSquare"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" app:layout_constraintTop_toBottomOf="@+id/details_fragment_title"
+            android:layout_height="500dp"
+            app:strokeColor="@null"
+            android:scaleType="centerCrop"
             android:layout_marginTop="16dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
     <TextView
             android:text="Name Surname"
             android:textAppearance="@style/TitleTextStyle"
@@ -39,8 +42,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/grey_circle_background"
-            android:padding="12dp"
-            android:src="@drawable/icon_unchecked" android:id="@+id/imageButton"
+            android:padding="16dp"
+            android:src="@drawable/icon_unchecked"
+            android:id="@+id/save_button"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
     <RelativeLayout
             android:layout_width="wrap_content"
@@ -70,12 +74,3 @@
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-<!--            <com.google.android.material.button.MaterialButton-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:icon="@drawable/download_icon"-->
-<!--                    app:iconGravity="textStart"-->
-<!--                    -->
-
-<!--            />-->

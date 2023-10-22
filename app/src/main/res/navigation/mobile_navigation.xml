@@ -9,7 +9,10 @@
             android:id="@+id/navigation_home"
             android:name="com.example.pexelsapp.ui.home.HomeFragment"
             android:label="@string/title_home"
-            tools:layout="@layout/fragment_home"/>
+            tools:layout="@layout/fragment_home">
+        <action android:id="@+id/action_navigation_home_to_detailsFragment" app:destination="@id/detailsFragment"/>
+        <argument android:name="bitmap" app:argType="string" android:defaultValue="0"/>
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_dashboard"
@@ -22,4 +25,9 @@
             android:name="com.example.pexelsapp.ui.notifications.NotificationsFragment"
             android:label="@string/title_notifications"
             tools:layout="@layout/fragment_notifications"/>
+    <fragment android:id="@+id/detailsFragment" android:name="com.example.pexelsapp.ui.details.DetailsFragment"
+              android:label="DetailsFragment">
+        <argument android:name="bitmap" app:argType="string"/>
+        <argument android:name="author_name" app:argType="string"/>
+    </fragment>
 </navigation>

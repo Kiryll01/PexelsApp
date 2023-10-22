@@ -11,7 +11,8 @@
             app:shapeAppearanceOverlay="@style/RoundedSquare"
             android:layout_width="190dp"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY">
+            android:scaleType="fitXY"
+            app:strokeColor="@null">
 
     </com.google.android.material.imageview.ShapeableImageView>
 </FrameLayout>

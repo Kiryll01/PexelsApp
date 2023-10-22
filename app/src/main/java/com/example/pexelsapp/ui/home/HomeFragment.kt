@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -37,8 +38,15 @@ class HomeFragment : Fragment() {
 
     //TODO : reformat
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
-        val adapter = ImageListAdapter()
+        val adapter = ImageListAdapter{
+            val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(
+                it.url,
+                it.photographer
+            )
+            view.findNavController().navigate(action)
+        }
         var previousCheckedId = -1
         binding.apply {
             val radioGroup = binding.collectionsScrollView.radioGroup
