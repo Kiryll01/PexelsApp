@@ -3,7 +3,11 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id("androidx.navigation.safeargs")
+    id 'com.google.devtools.ksp' version '1.8.0-1.0.8'
+
 }
+
+apply plugin: 'kotlin-kapt'
 
 android {
     namespace 'com.example.pexelsapp'
@@ -72,6 +76,14 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
     // Coil
     implementation 'io.coil-kt:coil:1.4.0'
+
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+    // To use Kotlin Symbol Processing (KSP)
+    ksp "androidx.room:room-compiler:$room_version"
 
 
 }
