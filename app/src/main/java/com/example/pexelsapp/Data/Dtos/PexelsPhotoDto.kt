@@ -10,9 +10,11 @@ data class PexelsPhotoDto(
     val photographer: String,
     val src: Map<String, String>
 ){
-    fun asEntity() : PexelsPhotoEntity {
-        return PexelsPhotoEntity(id)
-    }
+    fun asEntity() = PexelsPhotoEntity(
+        id,
+        width,
+        height, url, photographer, src
+    )
 }
 
 enum class PexelsSize(val sizeName:String) {

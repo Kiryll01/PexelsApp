@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup
+import android.widget.SearchView
+import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -17,6 +19,7 @@ import com.example.pexelsapp.R
 import com.example.pexelsapp.garbage.SearchKeyWordsAdapter
 import com.example.pexelsapp.databinding.FragmentHomeBinding
 import com.google.android.material.radiobutton.MaterialRadioButton
+import kotlinx.coroutines.Job
 
 class HomeFragment : Fragment() {
 
@@ -33,8 +36,25 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+
+        binding.searchView.setOnQueryTextListener (android.widget.SearchView.OnQueryTextListener{
+
+            private var job : Job?=null
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                job?.cancel()
+                return true
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                job = viewModel.refreshPhotos(query?:" ")
+                return true
+            }
+        })
         return binding.root
     }
+
+
 
     //TODO : reformat
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
