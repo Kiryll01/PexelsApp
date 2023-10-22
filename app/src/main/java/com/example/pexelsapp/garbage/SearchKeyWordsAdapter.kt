@@ -1,11 +1,10 @@
-package com.example.pexelsapp.Adapters
+package com.example.pexelsapp.garbage
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pexelsapp.R
 import com.example.pexelsapp.databinding.SearchRequestItemBinding
-
 private const val TAG="SEARCH_KEYWORD_ADAPTER"
 class SearchKeyWordsAdapter(private val collections : List<String>) : RecyclerView.Adapter<SearchKeyWordsAdapter.CollectionsViewHolder>(){
     class CollectionsViewHolder(private val binding : SearchRequestItemBinding)
@@ -14,14 +13,15 @@ class SearchKeyWordsAdapter(private val collections : List<String>) : RecyclerVi
             binding.collectionName.text=collectionName
             // Todo : set search
             binding.collectionName.apply { setOnClickListener{
-               setBackgroundResource( R.drawable.red_round_rectangle)
+               setBackgroundResource(R.drawable.red_round_rectangle)
+                setTextColor(resources.getColor(R.color.white))
             }
         }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionsViewHolder {
-        return CollectionsViewHolder(SearchRequestItemBinding.inflate( LayoutInflater.from(parent.context)))
+        return CollectionsViewHolder(SearchRequestItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
 
     override fun getItemCount()= collections.size

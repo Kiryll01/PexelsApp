@@ -4,14 +4,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.button.MaterialButton
-            android:padding="4dp"
+    <Button
+            android:id="@+id/collection_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:text="@string/app_name"
+            android:text="cats"
             android:background="@drawable/grey_round_rectangle"
-            android:id="@+id/collection_name">
-
-    </com.google.android.material.button.MaterialButton>
+            />
 </FrameLayout>

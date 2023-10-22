@@ -21,7 +21,8 @@ class HomeViewModel : ViewModel() {
     lateinit var collections : List<String>
     init {
         getPhotos()
-        initCollections()
+//       initCollections()
+        collections= arrayListOf()
     }
     private fun getPhotos(){
         viewModelScope.launch{
