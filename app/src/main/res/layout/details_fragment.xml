@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:padding="24dp">
+
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_arrow"
+            android:background="@drawable/back_button_background"
+            android:padding="8dp"
+
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" android:id="@+id/imageButton2"/>
+
+    <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            app:shapeAppearanceOverlay="@style/RoundedSquare"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" app:layout_constraintTop_toBottomOf="@+id/details_fragment_title"
+            android:layout_marginTop="16dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    <TextView
+            android:text="Name Surname"
+            android:textAppearance="@style/TitleTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/details_fragment_title"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="16dp"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/grey_circle_background"
+            android:padding="12dp"
+            android:src="@drawable/icon_unchecked" android:id="@+id/imageButton"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/grey_round_rectangle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+        <ImageButton
+                android:id="@+id/download_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/download_icon"
+                android:background="@drawable/red_circle_background"
+                android:padding="12dp">
+        </ImageButton>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/download_button"
+                android:paddingStart="24dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="24dp"
+                android:text="Download"
+                android:layout_alignTop="@+id/download_button"
+
+        />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:icon="@drawable/download_icon"-->
+<!--                    app:iconGravity="textStart"-->
+<!--                    -->
+
+<!--            />-->

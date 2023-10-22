@@ -32,7 +32,7 @@ class ImageListAdapter : ListAdapter<PexelsPhotoDto,ImageListAdapter.ImageViewHo
             binding.apply {
                 val imgUri = photo.src[PexelsSize.MEDIUM.sizeName]
                     ?.let{it.toUri().buildUpon().scheme("https").build()}
-                binding.image.load(imgUri) {
+                image.load(imgUri) {
                     placeholder(R.drawable.loading_img)
                     error(R.drawable.icon_download_error)
                 }
