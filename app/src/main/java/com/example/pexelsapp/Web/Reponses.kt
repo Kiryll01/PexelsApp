@@ -18,6 +18,7 @@ data class PexelsSearchResponse(
 
 @JsonClass(generateAdapter = true)
 data class PexelsCollectionsResponse(
+    @Json(name="collections")
 val pexelsCollection : List<PexelsCollectionItem>
 )
 data class PexelsCollectionItem(

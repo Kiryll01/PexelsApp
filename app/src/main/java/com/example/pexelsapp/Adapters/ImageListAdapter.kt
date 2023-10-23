@@ -38,7 +38,6 @@ class ImageListAdapter(private val onImageClickAction : (PexelsPhotoDto)->Unit) 
                 photo.src[PexelsSize.MEDIUM.sizeName]?.let {
                     loadImage(it, image)
                 }
-                Log.d("TAG", "image is bind to the item")
             }
         }
     }

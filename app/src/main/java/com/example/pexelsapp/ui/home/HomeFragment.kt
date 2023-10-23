@@ -2,6 +2,7 @@ package com.example.pexelsapp.ui.home
 
 import android.location.GnssAntennaInfo.Listener
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,9 +22,11 @@ import com.example.pexelsapp.R
 import com.example.pexelsapp.garbage.SearchKeyWordsAdapter
 import com.example.pexelsapp.databinding.FragmentHomeBinding
 import com.google.android.material.radiobutton.MaterialRadioButton
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+private const val TAG="HOME_FRAGMENT"
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -63,8 +66,26 @@ class HomeFragment : Fragment() {
 
     //TODO : reformat
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
+
+                binding.collectionsScrollView.apply {
+                    viewModel.collections.observe(viewLifecycleOwner){
+                        Log.d(TAG,"$it")
+                        if( it.isNotEmpty() && it.size>6 ){
+                            radioButton1.text = it[0]
+                            radioButton2.text = it[1]
+                            radioButton3.text = it[2]
+                            radioButton4.text = it[3]
+                            radioButton5.text = it[4]
+                            radioButton6.text = it[5]
+                            radioButton7.text = it[6]
+                    }
+                    }
+                }
+
+
+
+
         val adapter = ImageListAdapter{
             val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(
                 it.url,
