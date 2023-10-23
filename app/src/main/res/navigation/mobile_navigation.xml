@@ -11,7 +11,6 @@
             android:label="@string/title_home"
             tools:layout="@layout/fragment_home">
         <action android:id="@+id/action_navigation_home_to_detailsFragment" app:destination="@id/detailsFragment"/>
-        <argument android:name="bitmap" app:argType="string" android:defaultValue="0"/>
     </fragment>
 
     <fragment
@@ -30,5 +29,9 @@
         <argument android:name="bitmap" app:argType="string"/>
         <argument android:name="author_name" app:argType="string"/>
         <action android:id="@+id/action_detailsFragment_to_navigation_home" app:destination="@id/navigation_home"/>
+    </fragment>
+    <fragment android:id="@+id/navigation_bookmarks" android:name="com.example.pexelsapp.ui.Bookmarks.BookmarksFragment"
+              android:label="fragment_bookmarks" tools:layout="@layout/fragment_bookmarks">
+        <action android:id="@+id/action_bookmarksFragment_to_detailsFragment" app:destination="@id/detailsFragment"/>
     </fragment>
 </navigation>

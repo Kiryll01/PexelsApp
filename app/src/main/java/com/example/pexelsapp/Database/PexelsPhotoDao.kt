@@ -2,13 +2,15 @@ package com.example.pexelsapp.Database
 
 import androidx.room.*
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
+import com.google.android.material.circularreveal.CircularRevealHelper.Strategy
 import kotlinx.coroutines.flow.Flow
+import java.io.Serializable
 
 @Dao
 interface PexelsPhotoDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(photo: PexelsPhotoEntity)
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(photos : List<PexelsPhotoEntity>)
     @Update
     suspend fun update(photo: PexelsPhotoEntity)

@@ -5,7 +5,7 @@
                 android:title=""
                 android:icon="@drawable/home_button_active" />
         <item
-                android:id="@+id/navigation_dashboard"
+                android:id="@+id/navigation_bookmarks"
                 android:title=""
                 android:icon="@drawable/icon_unchecked" />
 </menu>

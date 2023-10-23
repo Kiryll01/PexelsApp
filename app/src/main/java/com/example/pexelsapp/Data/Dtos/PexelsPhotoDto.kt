@@ -1,8 +1,9 @@
 package com.example.pexelsapp.Data.Dtos
 
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
+import java.io.Serializable
 
-data class PexelsPhotoDto(
+data class PexelsPhotoDto (
     val id: Int,
     val width: Int,
     val height: Int,

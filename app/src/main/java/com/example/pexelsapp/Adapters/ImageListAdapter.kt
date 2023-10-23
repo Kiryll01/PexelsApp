@@ -9,6 +9,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import coil.load
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.Dtos.PexelsSize
@@ -19,7 +20,8 @@ import com.example.pexelsapp.ui.home.HomeFragmentArgs
 import com.example.pexelsapp.ui.home.HomeFragmentDirections
 
 private const val TAG="IMAGE_LIST_ADAPTER"
-class ImageListAdapter(private val onImageClickAction : (PexelsPhotoDto)->Unit) : ListAdapter<PexelsPhotoDto,ImageListAdapter.ImageViewHolder>(DiffCallback){
+class ImageListAdapter (private val onImageClickAction : (PexelsPhotoDto)->Unit)
+    : ListAdapter<PexelsPhotoDto,ImageListAdapter.ImageViewHolder>(DiffCallback){
 
     companion object DiffCallback : DiffUtil.ItemCallback<PexelsPhotoDto>(){
         override fun areItemsTheSame(oldItem: PexelsPhotoDto, newItem: PexelsPhotoDto): Boolean {
@@ -31,9 +33,9 @@ class ImageListAdapter(private val onImageClickAction : (PexelsPhotoDto)->Unit) 
         }
 
     }
-    class ImageViewHolder(private val binding : ImageItemBinding)
-        : RecyclerView.ViewHolder(binding.root) {
-        fun bind(photo: PexelsPhotoDto) {
+    class ImageViewHolder(binding : ImageItemBinding) : AbstractViewHolder<PexelsPhotoDto,ImageItemBinding>(binding)
+    {
+        override fun bind(photo: PexelsPhotoDto) {
             binding.apply {
                 photo.src[PexelsSize.MEDIUM.sizeName]?.let {
                     loadImage(it, image)
