@@ -85,8 +85,7 @@ class HomeFragment : Fragment() {
 
         val adapter = ImageListAdapter{
             val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(
-                it.url,
-                it.photographer
+               it
             )
             view.findNavController().navigate(action)
         }

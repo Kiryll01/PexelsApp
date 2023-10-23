@@ -2,42 +2,53 @@ package com.example.pexelsapp.ui.details
 
 import android.app.DownloadManager
 import android.content.Context.DOWNLOAD_SERVICE
+import android.health.connect.datatypes.units.Length
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import coil.load
+import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
+import com.example.pexelsapp.Data.PexelsSize
+import com.example.pexelsapp.PexelsApplication
 import com.example.pexelsapp.R
 import com.example.pexelsapp.Web.loadImage
 import com.example.pexelsapp.databinding.DetailsFragmentBinding
 import com.example.pexelsapp.databinding.FragmentHomeBinding
+import com.example.pexelsapp.ui.home.HomeViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 private const val TAG="DETAILS_FRAGMENT"
 class DetailsFragment : Fragment() {
     private var _binding: DetailsFragmentBinding? = null
     private val binding get() = _binding!!
-    private var imageUrl : String = ""
-    private var authorName : String = "incognito"
+    private var photo : PexelsPhotoDto? = null
+    private val viewModel by viewModels<DetailsViewModel> {
+        DetailsViewModelFactory((activity?.application as PexelsApplication).repository)
+    }
     companion object{
-        const val BITMAP_URL="bitmap"
-        const val AUTHOR_NAME="author_name"
+        const val PHOTO ="photo"
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            imageUrl = it.getString(BITMAP_URL).toString()
-            Log.d(TAG,"$imageUrl")
-            authorName=it.getString(AUTHOR_NAME)?:"incognito"
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                photo = it.getSerializable(PHOTO,PexelsPhotoDto::class.java) ?: null
+            }
+            else Toast.makeText(requireContext(),"you have old version of android",Toast.LENGTH_SHORT)
+            Log.d(TAG,"receive photo $photo")
 
         }
 
@@ -54,19 +65,29 @@ class DetailsFragment : Fragment() {
         val navBar= requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
         navBar.visibility=View.GONE
 
+        val imageUrl= photo?.src?.get(PexelsSize.MEDIUM.sizeName) ?: " "
+
         binding.backNavigation.setOnClickListener{
             val action = DetailsFragmentDirections.actionDetailsFragmentToNavigationHome()
             view.findNavController().navigate(action)
         }
 
-        val uri = imageUrl.toUri().buildUpon().scheme("https").build()
-        binding.apply {
-            image.load(uri) {
+        photo?.let{
+           var uri = imageUrl.toUri().buildUpon().scheme("https").build()
+            binding.image.load(uri) {
                 placeholder(R.drawable.loading_img)
             }
-            detailsFragmentTitle.text=authorName
+        }
+        binding.apply {
+
+            viewModel.saveButtonState.observe(viewLifecycleOwner){
+                if(it==false) saveButton.setImageResource(R.drawable.icon_unchecked)
+                else saveButton.setImageResource(R.drawable.icon_checked)
+            }
+
+            detailsFragmentTitle.text=photo?.photographer
             downloadButton.setOnClickListener{
-                    val request = DownloadManager.Request(Uri.parse(imageUrl))
+                    val request = DownloadManager.Request(Uri.parse( imageUrl))
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                         .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,
                             imageUrl.substringAfter("www.pexels.com"))
@@ -74,8 +95,9 @@ class DetailsFragment : Fragment() {
                     downloadManager.enqueue(request)
             }
             saveButton.setOnClickListener{
-                
-                saveButton.setImageResource(R.drawable.icon_checked)
+                photo?.let {
+                    it.isLiked=!it.isLiked
+                    viewModel.saveState(it.asEntity()) }
             }
         }
     }

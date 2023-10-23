@@ -1,7 +1,9 @@
 package com.example.pexelsapp.Data.Dtos
 
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
-import java.io.Serializable
+import com.example.pexelsapp.Data.PexelsSize
+import kotlinx.serialization.Serializable
+
 
 data class PexelsPhotoDto (
     val id: Int,
@@ -9,8 +11,9 @@ data class PexelsPhotoDto (
     val height: Int,
     val url: String,
     val photographer: String,
-    val src: Map<String, String>
-){
+    val src: Map<String, String>,
+    var isLiked : Boolean = false
+) : java.io.Serializable{
     fun asEntity() = PexelsPhotoEntity(
         id,
         width,
@@ -19,18 +22,8 @@ data class PexelsPhotoDto (
         src.get(PexelsSize.SMALL.sizeName) ?:"",
         src.get(PexelsSize.MEDIUM.sizeName)?:"",
         src.get(PexelsSize.LARGE.sizeName)?:"",
-        src.get(PexelsSize.ORIGINAL.sizeName)?:""
+        src.get(PexelsSize.ORIGINAL.sizeName)?:"",
+        isLiked
     )
 }
 
-enum class PexelsSize(val sizeName:String) {
-    TINY("tiny"),
-    SMALL("small"),
-    MEDIUM("medium"),
-    LARGE("large"),
-    ORIGINAL("original");
-    companion object {
-        fun fromName(name: String): PexelsSize? = PexelsSize.values().find { it.sizeName == name }
-    }
-
-}

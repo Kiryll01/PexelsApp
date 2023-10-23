@@ -12,6 +12,7 @@ class PhotosRepository(
    private val app : PexelsApplication
 ) {
    val photosFlow :  Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAll()
+   val likedPhotosFlow : Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAllLiked()
    suspend fun refreshVideos(queryParam : String){
       app.database.apply {
          withContext(Dispatchers.IO){ photosDao().deleteUnliked()}
@@ -22,5 +23,11 @@ class PhotosRepository(
          }
 
       }
+   }
+   suspend fun insertPhoto(photo : PexelsPhotoEntity){
+      app.database.photosDao().insert(photo)
+   }
+   suspend fun deletePhotoById(id : Int){
+      app.database.photosDao().deleteById(id)
    }
 }

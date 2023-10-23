@@ -3,7 +3,7 @@ package com.example.pexelsapp.Data.Entitites
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
-import com.example.pexelsapp.Data.Dtos.PexelsSize
+
 
 @Entity(tableName = "photos")
 data class PexelsPhotoEntity(
@@ -31,6 +31,7 @@ data class PexelsPhotoEntity(
                 Pair("medium",medium),
                 Pair("large",large),
                 Pair("original",original)
-            )
+            ),
+        isLiked
         )
 }

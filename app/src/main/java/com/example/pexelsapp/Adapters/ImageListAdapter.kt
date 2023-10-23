@@ -8,16 +8,12 @@ import androidx.core.net.toUri
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
-import coil.load
+
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
-import com.example.pexelsapp.Data.Dtos.PexelsSize
-import com.example.pexelsapp.R
+import com.example.pexelsapp.Data.PexelsSize
 import com.example.pexelsapp.Web.loadImage
 import com.example.pexelsapp.databinding.ImageItemBinding
-import com.example.pexelsapp.ui.home.HomeFragmentArgs
-import com.example.pexelsapp.ui.home.HomeFragmentDirections
+
 
 private const val TAG="IMAGE_LIST_ADAPTER"
 class ImageListAdapter (private val onImageClickAction : (PexelsPhotoDto)->Unit)
