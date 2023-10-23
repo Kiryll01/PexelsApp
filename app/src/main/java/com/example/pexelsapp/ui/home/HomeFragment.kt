@@ -106,6 +106,7 @@ class HomeFragment : Fragment() {
                 val currentButton = binding.root.findViewById<MaterialRadioButton>(checkedId)
                 currentButton.setTextColor(resources.getColor(R.color.white))
                 currentButton.setBackgroundResource(R.drawable.red_round_rectangle)
+                viewModel.refreshPhotos(currentButton.text.toString())
                 previousCheckedId = checkedId
             }
             imagesRecyclerView.adapter = adapter
