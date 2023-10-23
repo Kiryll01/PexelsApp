@@ -10,23 +10,28 @@ import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pexelsapp.Adapters.ImageListAdapter
+import com.example.pexelsapp.PexelsApplication
 import com.example.pexelsapp.R
 import com.example.pexelsapp.garbage.SearchKeyWordsAdapter
 import com.example.pexelsapp.databinding.FragmentHomeBinding
 import com.google.android.material.radiobutton.MaterialRadioButton
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<HomeViewModel>()
+    private val viewModel by viewModels<HomeViewModel>{
+        HomeViewModelFactory((activity?.application as PexelsApplication).repository)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +42,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
 
-        binding.searchView.setOnQueryTextListener (android.widget.SearchView.OnQueryTextListener{
+        binding.searchView.setOnQueryTextListener (object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
             private var job : Job?=null
 
@@ -89,8 +94,10 @@ class HomeFragment : Fragment() {
                     StaggeredGridLayoutManager.VERTICAL
                 )
         }
-        viewModel.photos.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        lifecycleScope.launch {
+            viewModel.photos().collect{
+                adapter.submitList(it)
+            }
         }
     }
 

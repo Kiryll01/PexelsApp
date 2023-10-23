@@ -5,5 +5,6 @@ import com.example.pexelsapp.Database.PexelsAppDatabase
 
 class PexelsApplication : Application(){
     val database : PexelsAppDatabase by lazy { PexelsAppDatabase.instance(this) }
+    val repository : PhotosRepository by  lazy{PhotosRepository(this)}
 
 }

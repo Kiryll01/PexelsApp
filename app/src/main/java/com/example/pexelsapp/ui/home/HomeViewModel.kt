@@ -1,34 +1,33 @@
 package com.example.pexelsapp.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.PhotosRepository
 import com.example.pexelsapp.Web.PexelsApiClient
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
 
-    private val _photos :  MutableLiveData<List<PexelsPhotoDto>> = MutableLiveData()
-    val photos : LiveData<List<PexelsPhotoDto>> = _photos
-    var collections : List<String>
 
+    var collections : List<String>
+    fun photos() = repository.photosFlow.map {
+        it.map { photo->photo.asDto() }
+    }
     init {
-        getPhotos()
+//        getPhotos()
 //       initCollections()
         collections= arrayListOf()
     }
-    private fun getPhotos(){
-        viewModelScope.launch{
-           val response= PexelsApiClient.apiService.searchPhotos("lions")
-            _photos.value=response.photos
-        }
-    }
+//    private fun getPhotos(){
+//        viewModelScope.launch{
+//           val response= PexelsApiClient.apiService.searchPhotos("lions")
+//            _photos.value=response.photos
+//        }
+//    }
 
      fun refreshPhotos(queryParamName : String) : Job {
        return viewModelScope.launch {  repository.refreshVideos(queryParamName)}
@@ -44,5 +43,14 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
                 .map { it.title }
 
         }
+    }
+}
+class HomeViewModelFactory(private val repository: PhotosRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HomeViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

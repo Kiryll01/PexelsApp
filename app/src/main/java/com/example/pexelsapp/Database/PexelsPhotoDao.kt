@@ -16,7 +16,7 @@ interface PexelsPhotoDao {
     @Delete
     suspend fun deleteUnliked(photo: PexelsPhotoEntity)
 
-    @Query("SELECT * FROM PexelsPhotoEntity")
+    @Query("SELECT * FROM photos")
     fun getAll(): Flow<List<PexelsPhotoEntity>>
 
     @Query("delete from photos where isLiked=false")

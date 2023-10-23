@@ -3,6 +3,7 @@ package com.example.pexelsapp.Data.Entitites
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
+import com.example.pexelsapp.Data.Dtos.PexelsSize
 
 @Entity(tableName = "photos")
 data class PexelsPhotoEntity(
@@ -12,7 +13,11 @@ data class PexelsPhotoEntity(
     val height: Int,
     val url: String,
     val photographer: String,
-    val src: Map<String, String>,
+    val tiny : String,
+    val small : String,
+    val medium : String,
+    val large : String,
+    val original : String,
     var isLiked : Boolean = false
 ){
     fun asDto() = PexelsPhotoDto(
@@ -21,6 +26,11 @@ data class PexelsPhotoEntity(
             height,
             url,
             photographer,
-            src
+            mapOf(Pair("tiny",tiny),
+                Pair("small",small),
+                Pair("medium",medium),
+                Pair("large",large),
+                Pair("original",original)
+            )
         )
 }

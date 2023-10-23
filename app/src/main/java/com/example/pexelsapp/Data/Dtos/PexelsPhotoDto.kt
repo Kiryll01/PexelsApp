@@ -13,7 +13,12 @@ data class PexelsPhotoDto(
     fun asEntity() = PexelsPhotoEntity(
         id,
         width,
-        height, url, photographer, src
+        height, url, photographer,
+        src[PexelsSize.TINY.sizeName] ?:"",
+        src.get(PexelsSize.SMALL.sizeName) ?:"",
+        src.get(PexelsSize.MEDIUM.sizeName)?:"",
+        src.get(PexelsSize.LARGE.sizeName)?:"",
+        src.get(PexelsSize.ORIGINAL.sizeName)?:""
     )
 }
 

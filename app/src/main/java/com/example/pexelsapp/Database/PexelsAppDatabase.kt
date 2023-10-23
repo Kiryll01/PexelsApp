@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
 
 @Database(entities = [PexelsPhotoEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false)
 abstract class PexelsAppDatabase : RoomDatabase() {
     abstract fun photosDao() : PexelsPhotoDao
