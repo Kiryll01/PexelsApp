@@ -20,7 +20,7 @@ import com.example.pexelsapp.databinding.FragmentHomeBinding
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class BookmarksFragment() : Fragment() {
+class BookmarksFragment : Fragment() {
 
     private var _binding: FragmentBookmarksBinding? = null
     private val binding get() = _binding!!

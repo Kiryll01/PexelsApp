@@ -33,7 +33,7 @@ class ImageListAdapter (private val onImageClickAction : (PexelsPhotoDto)->Unit)
     {
         override fun bind(photo: PexelsPhotoDto) {
             binding.apply {
-                photo.src[PexelsSize.MEDIUM.sizeName]?.let {
+                photo.src[PexelsSize.LARGE.sizeName]?.let {
                     loadImage(it, image)
                 }
             }

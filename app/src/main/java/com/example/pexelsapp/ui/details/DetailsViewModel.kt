@@ -13,7 +13,9 @@ class DetailsViewModel(private val repository: PhotosRepository) : ViewModel(){
 
     val saveButtonState : LiveData<Boolean> = _saveButtonState
 
-
+    fun setState(state : Boolean){
+        _saveButtonState.value=state
+    }
     fun saveState(photo : PexelsPhotoEntity){
         _saveButtonState.value=!(_saveButtonState.value!!)
         if(_saveButtonState.value==false) viewModelScope.launch {

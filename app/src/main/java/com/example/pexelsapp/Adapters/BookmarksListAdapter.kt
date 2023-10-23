@@ -26,7 +26,9 @@ class BookmarksListAdapter(private val onImageClickAction : (PexelsPhotoDto)->Un
     class BookmarksViewHolder(binding: BookmarksItemBinding) :
         AbstractViewHolder<PexelsPhotoDto, BookmarksItemBinding>(binding) {
         override fun bind(photo: PexelsPhotoDto) {
+
             binding.apply {
+                binding.bookmarksAuthorName.text=photo.photographer
                 photo.src[PexelsSize.MEDIUM.sizeName]?.let { loadImage(it,bookmarksImage) }
             }
         }

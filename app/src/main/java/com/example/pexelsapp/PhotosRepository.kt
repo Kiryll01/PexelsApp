@@ -18,10 +18,20 @@ class PhotosRepository(
          withContext(Dispatchers.IO){ photosDao().deleteUnliked()}
          withContext(Dispatchers.IO){
             val photos=PexelsApiClient.apiService.searchPhotos(queryParam,
-               perPage = 100).photos.map { it.asEntity() }
+               perPage = 30).photos.map { it.asEntity() }
             photosDao().insertAll(photos = photos)
          }
 
+      }
+   }
+   suspend fun defaultPhotos(){
+      app.database.apply {
+       //  withContext(Dispatchers.IO){ photosDao().deleteUnliked()}
+         withContext(Dispatchers.IO){
+            val photos=PexelsApiClient.apiService.getCuratedPhotos()
+               .photos.map { it.asEntity() }
+            photosDao().insertAll(photos)
+         }
       }
    }
    suspend fun insertPhoto(photo : PexelsPhotoEntity){

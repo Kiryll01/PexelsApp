@@ -1,6 +1,7 @@
 package com.example.pexelsapp.ui.details
 
 import android.app.DownloadManager
+import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
 import android.health.connect.datatypes.units.Length
 import android.net.Uri
@@ -38,10 +39,6 @@ class DetailsFragment : Fragment() {
         DetailsViewModelFactory((activity?.application as PexelsApplication).repository)
     }
 
-    companion object {
-        const val PHOTO = "photo"
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +47,7 @@ class DetailsFragment : Fragment() {
             photo = args.photo
         }
         Log.d(TAG, "receive photo $photo")
+        viewModel.setState(photo?.isLiked?:false)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -94,12 +92,13 @@ class DetailsFragment : Fragment() {
 
             detailsFragmentTitle.text=photo?.photographer
             downloadButton.setOnClickListener{
-                    val request = DownloadManager.Request(Uri.parse( imageUrl))
-                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                        .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,
-                            imageUrl.substringAfter("www.pexels.com"))
-                    val downloadManager = getSystemService(requireContext(), DownloadManager::class.java) as DownloadManager
-                    downloadManager.enqueue(request)
+                val downloadManager : DownloadManager = getSystemService(requireContext(),DownloadManager::class.java)!!
+                val request = DownloadManager.Request(Uri.parse(imageUrl))
+                    .setTitle("${imageUrl.substringAfter("pexels.com")}")
+                    .setDescription("Downloading an image from $imageUrl")
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    .setDestinationInExternalFilesDir(requireContext(), Environment.DIRECTORY_PICTURES, "pexels_app_images")
+                downloadManager.enqueue(request)
             }
             saveButton.setOnClickListener{
                 photo?.let {
