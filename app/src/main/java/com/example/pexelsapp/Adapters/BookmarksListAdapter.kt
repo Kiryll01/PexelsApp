@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
+import com.example.pexelsapp.Data.PexelsSize
+import com.example.pexelsapp.Web.loadImage
 import com.example.pexelsapp.databinding.BookmarksItemBinding
 
 
@@ -24,7 +26,9 @@ class BookmarksListAdapter(private val onImageClickAction : (PexelsPhotoDto)->Un
     class BookmarksViewHolder(binding: BookmarksItemBinding) :
         AbstractViewHolder<PexelsPhotoDto, BookmarksItemBinding>(binding) {
         override fun bind(photo: PexelsPhotoDto) {
-
+            binding.apply {
+                photo.src[PexelsSize.MEDIUM.sizeName]?.let { loadImage(it,bookmarksImage) }
+            }
         }
     }
 

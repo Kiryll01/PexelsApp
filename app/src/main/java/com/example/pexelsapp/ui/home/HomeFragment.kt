@@ -84,9 +84,7 @@ class HomeFragment : Fragment() {
                 }
 
         val adapter = ImageListAdapter{
-            val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(
-               it
-            )
+            val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(it)
             view.findNavController().navigate(action)
         }
         var previousCheckedId = -1

@@ -17,6 +17,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.PexelsSize
@@ -32,27 +33,25 @@ private const val TAG="DETAILS_FRAGMENT"
 class DetailsFragment : Fragment() {
     private var _binding: DetailsFragmentBinding? = null
     private val binding get() = _binding!!
-    private var photo : PexelsPhotoDto? = null
+    private var photo: PexelsPhotoDto? = null
     private val viewModel by viewModels<DetailsViewModel> {
         DetailsViewModelFactory((activity?.application as PexelsApplication).repository)
     }
-    companion object{
-        const val PHOTO ="photo"
+
+    companion object {
+        const val PHOTO = "photo"
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                photo = it.getSerializable(PHOTO,PexelsPhotoDto::class.java) ?: null
-            }
-            else Toast.makeText(requireContext(),"you have old version of android",Toast.LENGTH_SHORT)
-            Log.d(TAG,"receive photo $photo")
-
+            val args = DetailsFragmentArgs.fromBundle(it)
+            photo = args.photo
         }
-
+        Log.d(TAG, "receive photo $photo")
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = DetailsFragmentBinding.inflate(inflater,container,false)
 
@@ -65,9 +64,16 @@ class DetailsFragment : Fragment() {
         val navBar= requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
         navBar.visibility=View.GONE
 
-        val imageUrl= photo?.src?.get(PexelsSize.MEDIUM.sizeName) ?: " "
+        val imageUrl= photo?.src?.get(PexelsSize.ORIGINAL.sizeName) ?: " "
 
         binding.backNavigation.setOnClickListener{
+//            val navController=findNavController()
+//            val previousFragment=navController.previousBackStackEntry
+//            val previousFragmentId=previousFragment?.destination?.id
+//            previousFragmentId?.let {
+//
+//            }
+
             val action = DetailsFragmentDirections.actionDetailsFragmentToNavigationHome()
             view.findNavController().navigate(action)
         }
@@ -79,6 +85,7 @@ class DetailsFragment : Fragment() {
             }
         }
         binding.apply {
+
 
             viewModel.saveButtonState.observe(viewLifecycleOwner){
                 if(it==false) saveButton.setImageResource(R.drawable.icon_unchecked)

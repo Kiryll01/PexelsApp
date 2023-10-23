@@ -4,7 +4,6 @@ import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
 import com.example.pexelsapp.Data.PexelsSize
 import kotlinx.serialization.Serializable
 
-
 data class PexelsPhotoDto (
     val id: Int,
     val width: Int,

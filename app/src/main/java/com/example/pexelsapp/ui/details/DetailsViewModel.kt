@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
 import com.example.pexelsapp.PhotosRepository
 import com.example.pexelsapp.ui.home.HomeViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(private val repository: PhotosRepository) : ViewModel(){
@@ -11,6 +12,7 @@ class DetailsViewModel(private val repository: PhotosRepository) : ViewModel(){
     private val _saveButtonState : MutableLiveData<Boolean> = MutableLiveData(false)
 
     val saveButtonState : LiveData<Boolean> = _saveButtonState
+
 
     fun saveState(photo : PexelsPhotoEntity){
         _saveButtonState.value=!(_saveButtonState.value!!)
@@ -24,7 +26,7 @@ class DetailsViewModel(private val repository: PhotosRepository) : ViewModel(){
 }
 class DetailsViewModelFactory(private val repository: PhotosRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(DetailsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return DetailsViewModel(repository) as T
         }

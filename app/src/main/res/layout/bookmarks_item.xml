@@ -27,6 +27,7 @@
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
                 app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/bookmarks_author_name"
                 android:text="name surname"
                 android:textAlignment="center"
                 android:textColor="@color/white"

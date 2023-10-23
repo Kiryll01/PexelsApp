@@ -4,8 +4,6 @@ import android.widget.ImageView
 import androidx.annotation.Nullable
 import androidx.core.net.toUri
 import coil.load
-import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
-import com.example.pexelsapp.Data.Dtos.PexelsSize
 import com.example.pexelsapp.R
 import com.example.pexelsapp.databinding.ImageItemBinding
 import com.google.gson.Gson
