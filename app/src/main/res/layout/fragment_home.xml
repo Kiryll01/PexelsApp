@@ -23,7 +23,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"/>
-
+    <include
+            android:id="@+id/network_error_layout"
+            layout="@layout/network_error_layout"
+            android:visibility="gone"
+        />
     <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

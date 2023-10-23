@@ -5,7 +5,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".ui.Bookmarks.BookmarksFragment">
-
+    <include
+            layout="@layout/bookmarks_explore_layout"
+            android:id="@+id/bookmarks_explore_layout"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bookmarks_title"/>
     <TextView
             android:text="Bookmarks"
             android:textAppearance="@style/TitleTextStyle"

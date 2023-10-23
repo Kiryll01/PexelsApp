@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bookmarks_explore_text"
+            android:layout_gravity="center"
+            android:layout_marginTop="250dp"
+            android:text="image not found"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:fontFamily="sans-serif"
+
+    />
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/explore"
+            android:textAppearance="@style/RedTextStyle"
+            android:layout_marginTop="8dp"
+            android:textAlignment="center"
+    />
+</LinearLayout>

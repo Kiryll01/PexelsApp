@@ -101,6 +101,7 @@ class DetailsFragment : Fragment() {
                 downloadManager.enqueue(request)
             }
             saveButton.setOnClickListener{
+                Toast.makeText(requireContext(),"photo is saved to your collection",Toast.LENGTH_SHORT)
                 photo?.let {
                     it.isLiked=!it.isLiked
                     viewModel.saveState(it.asEntity()) }

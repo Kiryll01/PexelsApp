@@ -68,7 +68,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
                 binding.collectionsScrollView.apply {
+                    root.visibility=View.GONE
                     viewModel.collections.observe(viewLifecycleOwner){
                         Log.d(TAG,"$it")
                         if( it.isNotEmpty() && it.size>6 ){
@@ -80,6 +82,7 @@ class HomeFragment : Fragment() {
                             radioButton6.text = it[5]
                             radioButton7.text = it[6]
                     }
+                        root.visibility=View.VISIBLE
                     }
                 }
 
