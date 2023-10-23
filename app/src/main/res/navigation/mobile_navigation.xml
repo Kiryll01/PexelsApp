@@ -29,5 +29,6 @@
               android:label="DetailsFragment">
         <argument android:name="bitmap" app:argType="string"/>
         <argument android:name="author_name" app:argType="string"/>
+        <action android:id="@+id/action_detailsFragment_to_navigation_home" app:destination="@id/navigation_home"/>
     </fragment>
 </navigation>

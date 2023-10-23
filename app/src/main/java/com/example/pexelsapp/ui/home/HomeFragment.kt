@@ -83,9 +83,6 @@ class HomeFragment : Fragment() {
                     }
                 }
 
-
-
-
         val adapter = ImageListAdapter{
             val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(
                 it.url,
@@ -109,6 +106,7 @@ class HomeFragment : Fragment() {
                 viewModel.refreshPhotos(currentButton.text.toString())
                 previousCheckedId = checkedId
             }
+
             imagesRecyclerView.adapter = adapter
             imagesRecyclerView.layoutManager =
                 StaggeredGridLayoutManager(

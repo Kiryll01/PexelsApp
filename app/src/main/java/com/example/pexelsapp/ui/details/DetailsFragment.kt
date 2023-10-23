@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import coil.load
 import com.example.pexelsapp.R
 import com.example.pexelsapp.Web.loadImage
@@ -44,12 +45,20 @@ class DetailsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = DetailsFragmentBinding.inflate(inflater,container,false)
 
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         val navBar= requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
         navBar.visibility=View.GONE
+
+        binding.backNavigation.setOnClickListener{
+            val action = DetailsFragmentDirections.actionDetailsFragmentToNavigationHome()
+            view.findNavController().navigate(action)
+        }
+
         val uri = imageUrl.toUri().buildUpon().scheme("https").build()
         binding.apply {
             image.load(uri) {
@@ -65,7 +74,7 @@ class DetailsFragment : Fragment() {
                     downloadManager.enqueue(request)
             }
             saveButton.setOnClickListener{
-
+                
                 saveButton.setImageResource(R.drawable.icon_checked)
             }
         }
