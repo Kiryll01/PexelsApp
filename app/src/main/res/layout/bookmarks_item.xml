@@ -1,34 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginTop= "8dp"
         android:layout_marginBottom="8dp"
-        android:layout_centerVertical="true"
->
-<androidx.cardview.widget.CardView
-   android:layout_width="wrap_content"
-   android:layout_height="wrap_content"
-   app:cardCornerRadius="8dp"
->
+        app:cardCornerRadius="8dp">
 <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <com.google.android.material.imageview.ShapeableImageView
+        <ImageView
                 android:id="@+id/bookmarks_image"
                 android:layout_width="167dp"
                 android:layout_height="wrap_content"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:strokeColor="@null">
-        </com.google.android.material.imageview.ShapeableImageView>
+                app:layout_constraintBottom_toBottomOf="parent">
+        </ImageView>
 
         <com.google.android.material.textview.MaterialTextView
                 android:paddingTop="4dp"
@@ -47,5 +40,4 @@
                 />
 </RelativeLayout>
 </androidx.cardview.widget.CardView>
-</FrameLayout>
 

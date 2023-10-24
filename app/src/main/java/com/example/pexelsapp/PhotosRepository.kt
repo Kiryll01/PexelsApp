@@ -19,6 +19,7 @@ class PhotosRepository(
          withContext(Dispatchers.IO){
             val photos=PexelsApiClient.apiService.searchPhotos(queryParam,
                perPage = 30).photos.map { it.asEntity() }
+
             photosDao().insertAll(photos = photos)
          }
 

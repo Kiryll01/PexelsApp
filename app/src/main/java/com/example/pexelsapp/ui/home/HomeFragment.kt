@@ -42,8 +42,10 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        binding.collectionsScrollView.root.visibility=View.GONE
 
         binding.searchView.setOnQueryTextListener (object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
@@ -70,6 +72,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+
         binding.networkErrorLayout.root.apply {
             viewModel.launchException.observe(viewLifecycleOwner) {info->
                 if (info.launchException) {
@@ -85,7 +88,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.collectionsScrollView.apply {
-                    root.visibility=View.GONE
+
                     viewModel.collections.observe(viewLifecycleOwner){
                         Log.d(TAG,"$it")
                         if( it.isNotEmpty() && it.size>6 ){
@@ -136,6 +139,10 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        binding.collectionsScrollView.root.visibility=View.GONE
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
