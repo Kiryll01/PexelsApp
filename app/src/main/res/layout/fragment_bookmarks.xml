@@ -6,6 +6,7 @@
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".ui.Bookmarks.BookmarksFragment">
     <include
+            android:visibility="gone"
             layout="@layout/bookmarks_explore_layout"
             android:id="@+id/bookmarks_explore_layout"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"

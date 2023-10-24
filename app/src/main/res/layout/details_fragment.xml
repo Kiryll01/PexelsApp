@@ -59,7 +59,8 @@
             android:layout_height="48dp"
             android:background="@drawable/grey_round_rectangle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/relativeLayout">
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/relativeLayout">
         <ImageButton
                 android:id="@+id/download_button"
                 android:layout_width="wrap_content"

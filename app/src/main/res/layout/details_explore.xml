@@ -4,6 +4,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_weight="2"
+        android:background="@color/white"
 >
 
     <TextView
@@ -11,7 +13,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/bookmarks_explore_text"
             android:layout_gravity="center"
-            android:layout_marginTop="250dp"
+            android:layout_marginTop="320dp"
             android:text="image not found"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -20,6 +22,7 @@
 
     />
     <TextView
+            android:id="@+id/explore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/explore"

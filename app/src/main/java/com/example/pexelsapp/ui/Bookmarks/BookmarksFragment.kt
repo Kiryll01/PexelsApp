@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pexelsapp.Adapters.BookmarksListAdapter
 import com.example.pexelsapp.Adapters.ImageListAdapter
@@ -24,6 +25,10 @@ class BookmarksFragment : Fragment() {
 
     private var _binding: FragmentBookmarksBinding? = null
     private val binding get() = _binding!!
+
+    companion object{
+        private val ifFirstLaunch : Boolean = true
+    }
 
     private val viewModel : BookmarksViewModel by viewModels {
         BookmarksViewModelFactory((activity?.application as PexelsApplication).repository)
@@ -41,6 +46,12 @@ class BookmarksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
+            bookmarksExploreLayout.root.visibility=View.VISIBLE
+            binding.bookmarksRecyclerView.visibility=View.GONE
+            bookmarksExploreLayout.explore.setOnClickListener{
+                val action=BookmarksFragmentDirections.actionNavigationBookmarksToNavigationHome()
+                findNavController().navigate(action)
+            }
             val adapter = BookmarksListAdapter {
                 val action = BookmarksFragmentDirections.actionBookmarksFragmentToDetailsFragment(it)
                 view.findNavController().navigate(action)
@@ -51,7 +62,11 @@ class BookmarksFragment : Fragment() {
                 )
             lifecycleScope.launch {
                 viewModel.likedPhotos().collect {
-                    adapter.submitList(it)
+                        if (it.isNotEmpty()) {
+                           binding.bookmarksRecyclerView.visibility=View.VISIBLE
+                           bookmarksExploreLayout.root.visibility=View.GONE
+                            adapter.submitList(it)
+                        }
                 }
             }
             bookmarksRecyclerView.adapter=adapter

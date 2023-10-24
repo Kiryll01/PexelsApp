@@ -33,5 +33,6 @@
     <fragment android:id="@+id/navigation_bookmarks" android:name="com.example.pexelsapp.ui.Bookmarks.BookmarksFragment"
               android:label="fragment_bookmarks" tools:layout="@layout/fragment_bookmarks">
         <action android:id="@+id/action_bookmarksFragment_to_detailsFragment" app:destination="@id/detailsFragment"/>
+        <action android:id="@+id/action_navigation_bookmarks_to_navigation_home" app:destination="@id/navigation_home"/>
     </fragment>
 </navigation>

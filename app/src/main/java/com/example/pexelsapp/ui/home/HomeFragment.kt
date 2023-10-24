@@ -56,6 +56,7 @@ class HomeFragment : Fragment() {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
                 job = viewModel.refreshPhotos(query?:" ")
+
                 return true
             }
         })
@@ -69,7 +70,21 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-                binding.collectionsScrollView.apply {
+        binding.networkErrorLayout.root.apply {
+            viewModel.launchException.observe(viewLifecycleOwner) {info->
+                if (info.launchException) {
+                    visibility = View.VISIBLE
+                    binding.networkErrorLayout.tryAgain.setOnClickListener{
+                        viewModel.refreshPhotos(info.searchWord)
+                    }
+                } else {
+                    if (visibility == View.VISIBLE)
+                        visibility = View.GONE
+                }
+            }
+        }
+
+        binding.collectionsScrollView.apply {
                     root.visibility=View.GONE
                     viewModel.collections.observe(viewLifecycleOwner){
                         Log.d(TAG,"$it")

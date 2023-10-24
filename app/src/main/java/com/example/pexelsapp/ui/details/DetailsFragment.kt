@@ -3,6 +3,7 @@ package com.example.pexelsapp.ui.details
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
+import android.graphics.drawable.Drawable
 import android.health.connect.datatypes.units.Length
 import android.net.Uri
 import android.os.Build
@@ -19,7 +20,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.room.util.appendPlaceholders
+import coil.ImageLoader
 import coil.load
+import coil.request.ImageRequest
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.PexelsSize
 import com.example.pexelsapp.PexelsApplication
@@ -77,10 +81,28 @@ class DetailsFragment : Fragment() {
         }
 
         photo?.let{
-           var uri = imageUrl.toUri().buildUpon().scheme("https").build()
-            binding.image.load(uri) {
-                placeholder(R.drawable.loading_img)
-            }
+            var uri = imageUrl.toUri().buildUpon().scheme("https").build()
+            val imageLoader = ImageLoader.Builder(requireContext())
+                .build()
+            val request=ImageRequest.Builder(requireContext())
+                .data(uri)
+                .placeholder(R.drawable.loading_img)
+                .target(
+                    onStart = {placeholder -> binding.image.setImageDrawable(placeholder)},
+                    onSuccess = {result: Drawable -> binding.image.setImageDrawable(result) },
+                    onError = {_->
+                        binding.detailsExploreLayout.root.visibility=View.VISIBLE
+                        binding.saveButton.visibility=View.GONE
+                        binding.relativeLayout.visibility=View.GONE
+                        binding.image.visibility=View.GONE
+                        binding.detailsExploreLayout.explore.setOnClickListener{
+                            val action=DetailsFragmentDirections.actionDetailsFragmentToNavigationHome()
+                            findNavController().navigate(action)
+                        }
+                              },)
+                .build()
+            imageLoader.enqueue(request)
+
         }
         binding.apply {
 

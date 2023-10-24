@@ -3,6 +3,7 @@ package com.example.pexelsapp.Web
 import android.widget.ImageView
 import androidx.annotation.Nullable
 import androidx.core.net.toUri
+import coil.ImageLoader
 import coil.load
 import com.example.pexelsapp.R
 import com.example.pexelsapp.databinding.ImageItemBinding
@@ -26,6 +27,8 @@ import com.squareup.moshi.*
 //    }
 //}
 //class StringListConverter : AbstractListConverter<String>()
+
+
 
 fun loadImage (imgUri : String, image : ImageView) {
   val uri = imgUri
