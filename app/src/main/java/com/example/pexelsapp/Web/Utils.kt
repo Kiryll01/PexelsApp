@@ -34,7 +34,7 @@ fun loadImage (imgUri : String, image : ImageView) {
   val uri = imgUri
         ?.let { it.toUri().buildUpon().scheme("https").build() }
     image.load(uri) {
-        placeholder(R.drawable.download_icon)
+        placeholder(R.drawable.image_placeholder)
         error(R.drawable.icon_download_error)
     }
 }
