@@ -1,10 +1,12 @@
 package com.example.pexelsapp.ui.details
 
+import android.animation.ValueAnimator
 import android.app.DownloadManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.renderscript.Sampler.Value
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +14,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import coil.ImageLoader
 import coil.request.ImageRequest
+import com.example.pexelsapp.Animations
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.PexelsSize
 import com.example.pexelsapp.PexelsApplication
@@ -47,8 +51,6 @@ class DetailsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = DetailsFragmentBinding.inflate(inflater,container,false)
-
-
         return binding.root
     }
 
@@ -97,7 +99,6 @@ class DetailsFragment : Fragment() {
         }
         binding.apply {
 
-
             viewModel.saveButtonState.observe(viewLifecycleOwner){
                 if(it==false) saveButton.setImageResource(R.drawable.icon_unchecked)
                 else saveButton.setImageResource(R.drawable.icon_checked)
@@ -114,7 +115,14 @@ class DetailsFragment : Fragment() {
                 downloadManager.enqueue(request)
             }
             saveButton.setOnClickListener{
+
+                saveButton.animate()
+
                 Toast.makeText(requireContext(),"photo is saved to your collection",Toast.LENGTH_SHORT)
+                    .show()
+                saveButton.startAnimation(
+                    Animations.animationSet
+                )
                 photo?.let {
                     it.isLiked=!it.isLiked
                     viewModel.saveState(it.asEntity()) }

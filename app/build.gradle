@@ -46,6 +46,7 @@ dependencies {
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def room_version = "2.5.2"
+    def paging_version = "3.2.1"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -86,8 +87,8 @@ dependencies {
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
-    dependencies {
-        implementation("androidx.core:core-splashscreen:1.0.0")
-    }
+    implementation("androidx.core:core-splashscreen:1.0.0")
+
+    implementation "androidx.paging:paging-runtime:$paging_version"
 
 }
