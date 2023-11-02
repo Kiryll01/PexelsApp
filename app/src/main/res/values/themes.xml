@@ -16,6 +16,7 @@
         <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
             <item name="colorPrimary">@color/red</item>
             <item name="colorOnPrimary">@color/white</item>
+            <item name="android:windowActivityTransitions">true</item>
         </style>
         <style name="NoActionBar" parent="@android:style/Theme.Holo.Light">
             <item name="android:windowActionBar">false</item>

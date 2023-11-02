@@ -13,6 +13,7 @@ data class PexelsPhotoDto (
     val src: Map<String, String>,
     var isLiked : Boolean = false
 ) : java.io.Serializable{
+    constructor() : this(0, 0, 0, "", "", mapOf(), false)
     fun asEntity() = PexelsPhotoEntity(
         id,
         width,

@@ -1,10 +1,14 @@
 package com.example.pexelsapp
 
+import androidx.paging.*
+import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
 import com.example.pexelsapp.Web.PexelsApiClient
 import com.example.pexelsapp.Web.PexelsApiService
+import com.example.pexelsapp.pagination.PexelsRemoteMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 
@@ -13,6 +17,29 @@ class PhotosRepository(
 ) {
    val photosFlow :  Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAll()
    val likedPhotosFlow : Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAllLiked()
+
+
+   @OptIn(ExperimentalPagingApi::class)
+   fun pagingPhotos(queryParam: String) : Flow<PagingData<PexelsPhotoDto>>{
+      val pagingSourceFactory= { app.database.photosDao().pagingSource() }
+
+       return Pager(
+         config = PagingConfig(
+            pageSize = PexelsApiService.PEXELS_PAGE_SIZE,
+             enablePlaceholders = true
+           ),
+          pagingSourceFactory = pagingSourceFactory,
+          remoteMediator = PexelsRemoteMediator(
+             db = app.database,
+             apiCall = {page, perPage -> PexelsApiClient.apiService.searchPhotos(queryParam,page,perPage)  }
+          )
+      ).flow
+          .map { it.map {
+             it.asDto()
+             }
+          }
+   }
+
    suspend fun refreshVideos(queryParam : String){
       app.database.apply {
          withContext(Dispatchers.IO){ photosDao().deleteUnliked()}

@@ -10,5 +10,6 @@
             android:layout_height="wrap_content"
             android:text="cats"
             android:background="@drawable/grey_round_rectangle"
-            />
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+    />
 </FrameLayout>

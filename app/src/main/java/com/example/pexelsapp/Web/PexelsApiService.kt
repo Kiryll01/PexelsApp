@@ -9,11 +9,15 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+
 interface PexelsApiService {
+    companion object{
+        const val PEXELS_PAGE_SIZE= 30
+    }
     @GET("search")
     suspend fun searchPhotos(
         @Query("query") query: String,
-        @Query("per_page") perPage: Int = 30,
+        @Query("per_page") perPage: Int = PEXELS_PAGE_SIZE,
         @Query("page") page: Int = 1
     ): PexelsSearchResponse
 

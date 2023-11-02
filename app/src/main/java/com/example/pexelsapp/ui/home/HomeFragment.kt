@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.RadioGroup
 import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -49,15 +50,17 @@ class HomeFragment : Fragment() {
 
         binding.searchView.setOnQueryTextListener (object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
-            private var job : Job?=null
+//            private var job : Job?=null
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                job?.cancel()
+//                job?.cancel()
                 return true
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                job = viewModel.refreshPhotos(query?:" ")
+               if(query.isNullOrEmpty()) Toast.makeText(requireContext(),"discover something new!", Toast.LENGTH_SHORT).show()
+//                viewModel.setQueryParam(query!!)
+//              job = viewModel.refreshPhotos(query?:" ")
 
                 return true
             }
@@ -121,7 +124,8 @@ class HomeFragment : Fragment() {
                 val currentButton = binding.root.findViewById<MaterialRadioButton>(checkedId)
                 currentButton.setTextColor(resources.getColor(R.color.white))
                 currentButton.setBackgroundResource(R.drawable.red_round_rectangle)
-                viewModel.refreshPhotos(currentButton.text.toString())
+//                viewModel.refreshPhotos(currentButton.text.toString())
+//                viewModel.setQueryParam(currentButton.text.toString())
                 previousCheckedId = checkedId
             }
 
@@ -133,9 +137,10 @@ class HomeFragment : Fragment() {
                 )
         }
         lifecycleScope.launch {
-            viewModel.photos().collect{
-                adapter.submitList(it)
+            viewModel.photosFlow.collect{
+                adapter.submitData(it)
             }
+
         }
     }
 

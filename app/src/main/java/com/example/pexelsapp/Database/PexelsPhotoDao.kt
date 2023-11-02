@@ -1,5 +1,6 @@
 package com.example.pexelsapp.Database
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
 import com.google.android.material.circularreveal.CircularRevealHelper.Strategy
@@ -12,11 +13,16 @@ interface PexelsPhotoDao {
     suspend fun insert(photo: PexelsPhotoEntity)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(photos : List<PexelsPhotoEntity>)
+    @Query("delete from photos")
+    suspend fun deleteAll()
     @Update
     suspend fun update(photo: PexelsPhotoEntity)
-
     @Delete
     suspend fun delete(photo: PexelsPhotoEntity)
+    suspend fun refresh(photos : List<PexelsPhotoEntity>){
+        deleteAll()
+        insertAll(photos)
+    }
     @Query("delete from photos where id = :id")
     suspend fun deleteById(id:Int)
     @Query("SELECT * FROM photos")
@@ -25,4 +31,6 @@ interface PexelsPhotoDao {
     fun getAllLiked() : Flow<List<PexelsPhotoEntity>>
     @Query("delete from photos where isLiked=false")
     suspend fun deleteUnliked()
+    @Query("SELECT * FROM photos")
+    fun pagingSource() : PagingSource<Int,PexelsPhotoEntity>
 }

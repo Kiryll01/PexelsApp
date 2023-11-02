@@ -2,19 +2,33 @@ package com.example.pexelsapp.ui.home
 
 import android.net.http.NetworkException
 import androidx.lifecycle.*
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
+import com.example.pexelsapp.Database.PexelsPhotoDao
 import com.example.pexelsapp.PhotosRepository
 import com.example.pexelsapp.Web.PexelsApiClient
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
 
     private val _collections : MutableLiveData<List<String>> = MutableLiveData(arrayListOf())
     val collections  : LiveData<List<String>> get() =_collections
+
+//    private val _photosStateFlow= MutableStateFlow("cats")
+//    val photosStateFlow = _photosStateFlow.asStateFlow()
+//    fun setQueryParam(queryParam : String) {
+//        _photosStateFlow.value = queryParam
+//    }
+    val photosFlow : StateFlow<PagingData<PexelsPhotoDto>> = repository
+    .pagingPhotos("cats")
+    .stateIn(viewModelScope, SharingStarted.Lazily,PagingData.empty())
+
 
     private val _launchException : MutableLiveData<NetworkExceptionInfo> = MutableLiveData(
         NetworkExceptionInfo()
@@ -32,6 +46,9 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
         initCollections()
         initVideos()
     }
+
+
+
 
     fun photos() = repository.photosFlow
         .map {
