@@ -59,6 +59,7 @@ class HomeFragment : Fragment() {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
                if(query.isNullOrEmpty()) Toast.makeText(requireContext(),"discover something new!", Toast.LENGTH_SHORT).show()
+
 //                viewModel.setQueryParam(query!!)
 //              job = viewModel.refreshPhotos(query?:" ")
 
@@ -138,6 +139,7 @@ class HomeFragment : Fragment() {
         }
         lifecycleScope.launch {
             viewModel.photosFlow.collect{
+
                 adapter.submitData(it)
             }
 

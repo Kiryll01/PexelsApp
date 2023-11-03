@@ -31,7 +31,7 @@ class PhotosRepository(
           pagingSourceFactory = pagingSourceFactory,
           remoteMediator = PexelsRemoteMediator(
              db = app.database,
-             apiCall = {page, perPage -> PexelsApiClient.apiService.searchPhotos(queryParam,page,perPage)  }
+             apiCall = {page, perPage -> PexelsApiClient.apiService.searchPhotos(queryParam,page=page, perPage = perPage)  }
           )
       ).flow
           .map { it.map {
