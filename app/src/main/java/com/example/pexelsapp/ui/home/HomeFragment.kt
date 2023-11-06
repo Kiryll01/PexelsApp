@@ -12,12 +12,14 @@ import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pexelsapp.Adapters.ImageListAdapter
+import com.example.pexelsapp.Adapters.LoadStateAdapter
 import com.example.pexelsapp.PexelsApplication
 import com.example.pexelsapp.R
 import com.example.pexelsapp.garbage.SearchKeyWordsAdapter
@@ -59,7 +61,7 @@ class HomeFragment : Fragment() {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
                if(query.isNullOrEmpty()) Toast.makeText(requireContext(),"discover something new!", Toast.LENGTH_SHORT).show()
-                    viewModel.setQuery(query!!)
+                viewModel.setQuery(query!!)
 //                viewModel.setQueryParam(query!!)
 //              job = viewModel.refreshPhotos(query?:" ")
 
@@ -112,6 +114,9 @@ class HomeFragment : Fragment() {
             val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(it)
             view.findNavController().navigate(action)
         }
+        adapter.withLoadStateHeader(LoadStateAdapter{
+            viewModel.setQuery(viewModel.searchQuery.replayCache.last())
+        })
         var previousCheckedId = -1
         binding.apply {
             val radioGroup = binding.collectionsScrollView.radioGroup

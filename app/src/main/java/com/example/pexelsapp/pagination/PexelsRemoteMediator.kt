@@ -95,9 +95,16 @@ class PexelsRemoteMediator(
     private suspend fun getRemoteKeyForLastItem(
         state : PagingState<Int,PexelsPhotoEntity>
     ) : RemoteKeyEntity?{
-        return state.pages.lastOrNull{it.data.isNotEmpty()}?.data?.lastOrNull()
-            ?.let { image->
-                db.keysDao().getById(image.id)
-            }
+        val ids = ArrayList<Int>(30)
+        state.pages.lastOrNull{it.data.isNotEmpty()}?.data?.forEach{
+            ids.add(it.id)
+        }
+        return db.keysDao().getById(ids).maxByOrNull{ it?.nextPage ?: Int.MIN_VALUE }
+
     }
+//        return state.pages.lastOrNull{it.data.isNotEmpty()}?.data?.lastOrNull()
+//            ?.let { image->
+//                db.keysDao().getById(image.id)
+//            }
+//    }
 }

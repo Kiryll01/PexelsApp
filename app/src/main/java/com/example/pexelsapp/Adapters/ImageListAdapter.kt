@@ -64,7 +64,7 @@ class ImageListAdapter (private val onImageClickAction : (PexelsPhotoDto)->Unit)
 }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        val item=getItem(position)
+        val item=  getItem(position)
         item?.let { holder.bind(it) }
     }
 }

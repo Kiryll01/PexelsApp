@@ -41,4 +41,7 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/AppTheme</item>
     </style>
+    <style name="Widget.ProgressBar.Circle" parent="Widget.AppCompat.ProgressBar">
+        <item name="color">@color/red</item>
+    </style>
 </resources>

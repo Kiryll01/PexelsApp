@@ -19,9 +19,9 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
 
     private val _collections : MutableLiveData<List<String>> = MutableLiveData(arrayListOf())
     val collections  : LiveData<List<String>> get() =_collections
-    private val _searchQuery = MutableStateFlow<String>("cats")
+    private val _searchQuery = MutableStateFlow("cats")
 
-    val searchQuery = _searchQuery.asStateFlow()
+    val searchQuery = _searchQuery.asSharedFlow()
     fun setQuery(query : String){
         _searchQuery.value=query
         Log.d(TAG, "$query emit")
