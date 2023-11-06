@@ -1,5 +1,6 @@
 package com.example.pexelsapp
 
+import android.util.Log
 import androidx.paging.*
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
+private const val TAG="PHOTOS_REPOSITORY"
 
 class PhotosRepository(
    private val app : PexelsApplication
@@ -23,21 +25,21 @@ class PhotosRepository(
    fun pagingPhotos(queryParam: String) : Flow<PagingData<PexelsPhotoDto>>{
       val pagingSourceFactory= { app.database.photosDao().pagingSource() }
 
+       Log.d(TAG,"new pager with param $queryParam")
+
        return Pager(
          config = PagingConfig(
             pageSize = PexelsApiService.PEXELS_PAGE_SIZE,
-             enablePlaceholders = true
+             enablePlaceholders = false,
+             initialLoadSize = PexelsApiService.PEXELS_PAGE_SIZE*2,
+             prefetchDistance = 2
            ),
           pagingSourceFactory = pagingSourceFactory,
           remoteMediator = PexelsRemoteMediator(
              db = app.database,
              apiCall = {page, perPage -> PexelsApiClient.apiService.searchPhotos(queryParam,page=page, perPage = perPage)  }
           )
-      ).flow
-          .map { it.map {
-             it.asDto()
-             }
-          }
+      ).flow.map { it.map { it.asDto() }}
    }
 
    suspend fun refreshVideos(queryParam : String){

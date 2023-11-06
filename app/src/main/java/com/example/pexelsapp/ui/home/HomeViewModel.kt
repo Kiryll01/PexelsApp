@@ -1,33 +1,37 @@
 package com.example.pexelsapp.ui.home
 
-import android.net.http.NetworkException
+import android.util.Log
 import androidx.lifecycle.*
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
-import com.example.pexelsapp.Database.PexelsPhotoDao
 import com.example.pexelsapp.PhotosRepository
 import com.example.pexelsapp.Web.PexelsApiClient
+import com.google.android.material.tabs.TabLayout.TabGravity
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
+
+private const val TAG = "HOME_VIEW_MODEL"
 class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
 
     private val _collections : MutableLiveData<List<String>> = MutableLiveData(arrayListOf())
     val collections  : LiveData<List<String>> get() =_collections
+    private val _searchQuery = MutableStateFlow<String>("cats")
 
-//    private val _photosStateFlow= MutableStateFlow("cats")
-//    val photosStateFlow = _photosStateFlow.asStateFlow()
-//    fun setQueryParam(queryParam : String) {
-//        _photosStateFlow.value = queryParam
-//    }
-    val photosFlow : StateFlow<PagingData<PexelsPhotoDto>> = repository
-    .pagingPhotos("cats")
-    .stateIn(viewModelScope, SharingStarted.Lazily,PagingData.empty())
+    val searchQuery = _searchQuery.asStateFlow()
+    fun setQuery(query : String){
+        _searchQuery.value=query
+        Log.d(TAG, "$query emit")
+    }
+
+    val photosFlow : Flow<PagingData<PexelsPhotoDto>> = _searchQuery
+        .flatMapLatest {
+            Log.d(TAG,"new photosFlow has been created ")
+            repository.pagingPhotos(it) }
+        .cachedIn(viewModelScope)
 
 
     private val _launchException : MutableLiveData<NetworkExceptionInfo> = MutableLiveData(

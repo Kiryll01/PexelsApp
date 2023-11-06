@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
                if(query.isNullOrEmpty()) Toast.makeText(requireContext(),"discover something new!", Toast.LENGTH_SHORT).show()
-
+                    viewModel.setQuery(query!!)
 //                viewModel.setQueryParam(query!!)
 //              job = viewModel.refreshPhotos(query?:" ")
 
@@ -126,7 +126,7 @@ class HomeFragment : Fragment() {
                 currentButton.setTextColor(resources.getColor(R.color.white))
                 currentButton.setBackgroundResource(R.drawable.red_round_rectangle)
 //                viewModel.refreshPhotos(currentButton.text.toString())
-//                viewModel.setQueryParam(currentButton.text.toString())
+               viewModel.setQuery(currentButton.text.toString())
                 previousCheckedId = checkedId
             }
 
@@ -139,7 +139,6 @@ class HomeFragment : Fragment() {
         }
         lifecycleScope.launch {
             viewModel.photosFlow.collect{
-
                 adapter.submitData(it)
             }
 

@@ -20,7 +20,7 @@ interface PexelsPhotoDao {
     @Delete
     suspend fun delete(photo: PexelsPhotoEntity)
     suspend fun refresh(photos : List<PexelsPhotoEntity>){
-        deleteAll()
+        deleteUnliked()
         insertAll(photos)
     }
     @Query("delete from photos where id = :id")

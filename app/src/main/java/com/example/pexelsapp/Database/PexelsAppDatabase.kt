@@ -5,13 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
+import com.example.pexelsapp.Data.Entitites.RemoteKeyEntity
 
-@Database(entities = [PexelsPhotoEntity::class],
-    version = 2,
+@Database(entities = [PexelsPhotoEntity::class,
+                     RemoteKeyEntity::class],
+    version = 4,
     exportSchema = false)
 abstract class PexelsAppDatabase : RoomDatabase() {
     abstract fun photosDao() : PexelsPhotoDao
-
+    abstract fun keysDao() : RemoteKeyDao
     companion object{
         @Volatile
         private var INSTANCE : PexelsAppDatabase?=null

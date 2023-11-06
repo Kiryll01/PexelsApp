@@ -1,10 +1,12 @@
 package com.example.pexelsapp.pagination
 
+import android.nfc.Tag
 import android.util.Log
 import androidx.paging.*
 import androidx.room.withTransaction
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
+import com.example.pexelsapp.Data.Entitites.RemoteKeyEntity
 import com.example.pexelsapp.Database.PexelsAppDatabase
 import com.example.pexelsapp.Web.PexelsApiClient
 import com.example.pexelsapp.Web.PexelsApiService
@@ -17,53 +19,85 @@ class PexelsRemoteMediator(
     private val db : PexelsAppDatabase
 ) : RemoteMediator<Int,PexelsPhotoEntity>() {
     override suspend fun load(loadType: LoadType, state: PagingState<Int, PexelsPhotoEntity>): MediatorResult {
-        Log.d(TAG,"load function is called ")
         return try {
-            val pageIndex = when (loadType) {
-                LoadType.REFRESH -> 1
-                LoadType.PREPEND -> return MediatorResult.Success(
-                    endOfPaginationReached = true
-                )
+            val currentPage = when (loadType) {
+                LoadType.REFRESH -> {
+                    Log.d(TAG, "refresh is called")
+                    1
+//                    val remoteKey = getRemoteKeyClosestToCurrentPosition(state)
+//                    remoteKey?.nextPage?.minus(1) ?: 1
+                }
+
+                LoadType.PREPEND -> {
+                    Log.d(TAG, "prepend is called")
+                    return MediatorResult.Success(endOfPaginationReached = true)
+//                    val remoteKey = getRemoteKeyForFirstItem(state)
+//                    val prevPage = remoteKey?.prevPage ?: return MediatorResult.Success(
+//                        endOfPaginationReached = remoteKey != null
+//                    )
+//                    prevPage
+                }
 
                 LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                    if (lastItem == null) 1
-                    else {
-                        val lastPageIndex = state.pages.indexOfLast {
-                            it.data.contains(lastItem)
-                        }
-                        lastPageIndex + 1
-                    }
-
+                    Log.d(TAG,"append is called")
+                    val remoteKey = getRemoteKeyForLastItem(state)
+                    val nextPage = remoteKey?.nextPage ?: return MediatorResult.Success(
+                        endOfPaginationReached = remoteKey != null
+                    )
+                    nextPage
                 }
             }
-            val response = apiCall.invoke(pageIndex, state.config.pageSize)
 
-            val entities = response.photos.map {
-                it.asEntity()
+            val response = apiCall.invoke(currentPage, PexelsApiService.PEXELS_PAGE_SIZE)
+            val endOfPaginationReached = response.photos.isEmpty()
+
+            Log.d(TAG , "end of pagination reached : $endOfPaginationReached")
+            val prevPage = if (currentPage == 1) null else currentPage - 1
+            val nextPage = if (endOfPaginationReached) null else currentPage + 1
+            db.withTransaction {
+                if (loadType == LoadType.REFRESH) {
+                    db.photosDao().deleteUnliked()
+                    db.keysDao().deleteAll()
+                }
+                val keys = response.photos.map {
+                    RemoteKeyEntity(it.id, prevPage, nextPage)
+                }
+                db.keysDao().insertAll(keys)
+                db.photosDao().insertAll(response.photos.map { it.asEntity() })
+
             }
-
-            Log.d(TAG, "data : $entities")
-
-            if (loadType == LoadType.REFRESH) db.withTransaction {
-                db.photosDao().deleteAll()
-                db.photosDao().insertAll(entities)
-            }
-            else db.photosDao().insertAll(entities)
-
-            Log.d(TAG,"data inserted successfully")
-
-            MediatorResult.Success(
-                endOfPaginationReached = entities.isEmpty()
-            )
+            MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         }
-        catch (e : Exception){
-            return MediatorResult.Error(e)
+        catch (e:Exception){
+           return MediatorResult.Error(e)
         }
-
-
     }
-    override suspend fun initialize(): InitializeAction {
-        return InitializeAction.LAUNCH_INITIAL_REFRESH
+    private suspend fun getRemoteKeyClosestToCurrentPosition(
+        state : PagingState<Int,PexelsPhotoEntity>
+    ) : RemoteKeyEntity?{
+        return state.anchorPosition?.let { position->
+            state.closestItemToPosition(position)?.id?.let { id->
+                db.keysDao().getById(id)
+            }
+        }
+    }
+
+
+    private suspend fun getRemoteKeyForFirstItem(
+        state : PagingState<Int,PexelsPhotoEntity>
+    ) : RemoteKeyEntity? {
+        return state.pages.firstOrNull{
+            it.data.isNotEmpty()}?.data?.firstOrNull()
+            ?.let { image->
+                db.keysDao().getById(image.id)
+            }
+        }
+    private suspend fun getRemoteKeyForLastItem(
+        state : PagingState<Int,PexelsPhotoEntity>
+    ) : RemoteKeyEntity?{
+        return state.pages.lastOrNull{it.data.isNotEmpty()}?.data?.lastOrNull()
+            ?.let { image->
+                db.keysDao().getById(image.id)
+            }
     }
 }
