@@ -28,7 +28,8 @@ interface PexelsApiService {
     ) : PexelsCollectionsResponse
     @GET("curated")
     suspend fun getCuratedPhotos(
-        @Query("per_page") perPage: Int=30
+        @Query("per_page") perPage: Int=30,
+        @Query("page") page :Int = 1
     ) : PexelsSearchResponse
 }
 

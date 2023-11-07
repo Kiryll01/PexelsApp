@@ -19,13 +19,10 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
 
     private val _collections : MutableLiveData<List<String>> = MutableLiveData(arrayListOf())
     val collections  : LiveData<List<String>> get() =_collections
-    private val _searchQuery = MutableStateFlow("cats")
 
+
+    private val _searchQuery = MutableStateFlow("cats")
     val searchQuery = _searchQuery.asSharedFlow()
-    fun setQuery(query : String){
-        _searchQuery.value=query
-        Log.d(TAG, "$query emit")
-    }
 
     val photosFlow : Flow<PagingData<PexelsPhotoDto>> = _searchQuery
         .flatMapLatest {
@@ -33,16 +30,17 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
             repository.pagingPhotos(it) }
         .cachedIn(viewModelScope)
 
+    val curatedPhotosFlow =  repository.pagingCuratedPhotos()
 
-    private val _launchException : MutableLiveData<NetworkExceptionInfo> = MutableLiveData(
-        NetworkExceptionInfo()
-    )
+
+    private val _launchException : MutableLiveData<NetworkExceptionInfo> = MutableLiveData(NetworkExceptionInfo())
     val launchException : LiveData<NetworkExceptionInfo> = _launchException
 
-    data class NetworkExceptionInfo(
-        val launchException : Boolean=false,
-        val searchWord : String = " "
-    )
+    fun setQuery(query : String){
+        _searchQuery.value=query
+        Log.d(TAG, "$query emit")
+    }
+
     fun setLaunchException(value : NetworkExceptionInfo){
         _launchException.value=value
     }
@@ -50,18 +48,11 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
         initCollections()
         initVideos()
     }
-
-
-
-
     fun photos() = repository.photosFlow
         .map {
         it.filter { !it.isLiked }
             .map { photo -> photo.asDto() }
     }
-
-
-
     fun refreshPhotos(queryParamName: String): Job {
         val handler = CoroutineExceptionHandler { _, exception ->
             _launchException.value= NetworkExceptionInfo(
@@ -76,10 +67,7 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
                 searchWord = queryParamName
             )
         }
-
-
     }
-
     private fun initVideos(){
         viewModelScope.launch {
             repository.defaultPhotos()
@@ -92,7 +80,10 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
                 .map { it.title }
         }
     }
-
+    data class NetworkExceptionInfo(
+        val launchException : Boolean=false,
+        val searchWord : String = " "
+    )
 }
     class HomeViewModelFactory(private val repository: PhotosRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

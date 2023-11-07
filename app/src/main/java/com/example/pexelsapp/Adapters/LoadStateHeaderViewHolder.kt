@@ -11,9 +11,9 @@ import com.example.pexelsapp.databinding.HeaderLoadStateItemBinding
 
 
 class LoadStateHeaderViewHolder (
-    private val binding : HeaderLoadStateItemBinding,
+    binding: HeaderLoadStateItemBinding,
     private val retry : () ->Unit
-) : RecyclerView.ViewHolder(binding.root){
+) : AbstractViewHolder<LoadState,HeaderLoadStateItemBinding>(binding){
 
     init {
         binding.retry.setOnClickListener{
@@ -21,11 +21,13 @@ class LoadStateHeaderViewHolder (
         }
     }
 
-    fun bind(loadState : LoadState){
+
+    override fun bind(loadState : LoadState){
         if(loadState is LoadState.Error){
             binding.errorMsg.text=loadState.error.localizedMessage
         }
         binding.circleProgressBar.isVisible=loadState is LoadState.Loading
+        binding.textView.isVisible= loadState is LoadState.Error
         binding.retry.isVisible = loadState is LoadState.Error
         binding.errorMsg.isVisible = loadState is LoadState.Error
     }
