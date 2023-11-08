@@ -16,7 +16,7 @@ interface RemoteKeyDao {
     suspend fun update(key : RemoteKeyEntity)
     @Delete
     suspend fun delete(key: RemoteKeyEntity)
-    @Query("select * from photo_keys where image_id = :id")
+    @Query("SELECT * FROM photo_keys WHERE image_id = :id")
     suspend fun getById(id : Int) : RemoteKeyEntity?
     @Query("select * from photo_keys where image_id in (:ids)")
     suspend fun getById(ids : List<Int>) : List<RemoteKeyEntity?>

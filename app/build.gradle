@@ -93,4 +93,6 @@ dependencies {
     implementation "androidx.paging:paging-runtime:$paging_version"
     implementation "androidx.room:room-paging:2.5.0"
 
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
 }

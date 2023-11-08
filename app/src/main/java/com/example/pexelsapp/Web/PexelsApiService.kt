@@ -12,7 +12,7 @@ import retrofit2.http.Query
 
 interface PexelsApiService {
     companion object{
-        const val PEXELS_PAGE_SIZE= 30
+        const val PEXELS_PAGE_SIZE= 10
     }
     @GET("search")
     suspend fun searchPhotos(

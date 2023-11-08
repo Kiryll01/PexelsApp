@@ -51,7 +51,7 @@ class PhotosRepository(
             pageSize = PexelsApiService.PEXELS_PAGE_SIZE,
              enablePlaceholders = false,
              initialLoadSize = PexelsApiService.PEXELS_PAGE_SIZE*2,
-             prefetchDistance = 2,
+             prefetchDistance = 2
            ),
           pagingSourceFactory = pagingSourceFactory,
           remoteMediator = PexelsRemoteMediator(

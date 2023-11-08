@@ -23,7 +23,7 @@ class ImageListAdapter (private val onImageClickAction : (PexelsPhotoDto)->Unit)
 
     companion object DiffCallback : DiffUtil.ItemCallback<PexelsPhotoDto>() {
         override fun areItemsTheSame(oldItem: PexelsPhotoDto, newItem: PexelsPhotoDto): Boolean {
-            return oldItem == newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: PexelsPhotoDto, newItem: PexelsPhotoDto): Boolean {

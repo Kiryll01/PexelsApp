@@ -20,7 +20,7 @@
                     android:id="@+id/radio_button_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Radio Button 1"
+
                     android:button="@null"
                     android:clickable="true"
 
@@ -38,7 +38,7 @@
                     android:id="@+id/radio_button_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Radio Button 1"
+
                     android:button="@null"
                     android:clickable="true"
                     android:background="@drawable/grey_round_rectangle"
@@ -51,7 +51,7 @@
                     android:id="@+id/radio_button_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Radio Button 1"
+
                     android:button="@null"
                     android:clickable="true"
                     android:background="@drawable/grey_round_rectangle"
@@ -64,7 +64,7 @@
                     android:id="@+id/radio_button_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Radio Button 1"
+
                     android:button="@null"
                     android:clickable="true"
                     android:background="@drawable/grey_round_rectangle"
@@ -77,7 +77,7 @@
                     android:id="@+id/radio_button_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Radio Button 1"
+
                     android:button="@null"
                     android:clickable="true"
                     android:background="@drawable/grey_round_rectangle"
@@ -90,7 +90,7 @@
                     android:id="@+id/radio_button_6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Radio Button 1"
+
                     android:button="@null"
                     android:clickable="true"
                     android:background="@drawable/grey_round_rectangle"
@@ -103,7 +103,7 @@
                     android:id="@+id/radio_button_7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Radio Button 1"
+
                     android:button="@null"
                     android:clickable="true"
                     android:background="@drawable/grey_round_rectangle"
