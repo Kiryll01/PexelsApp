@@ -4,9 +4,11 @@ import android.graphics.pdf.PdfDocument.Page
 import android.util.Log
 import androidx.paging.*
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
+import com.example.pexelsapp.Data.Entitites.PexelsCollectionItemEntity
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
 import com.example.pexelsapp.Web.PexelsApiClient
 import com.example.pexelsapp.Web.PexelsApiService
+import com.example.pexelsapp.Web.PexelsCollectionItem
 import com.example.pexelsapp.pagination.PexelsRemoteMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -18,10 +20,13 @@ private const val TAG="PHOTOS_REPOSITORY"
 class PhotosRepository(
    private val app : PexelsApplication
 ) {
+
+   val collectionsFlow : Flow<List<PexelsCollectionItemEntity>> = app.database.collectionsDao().getAll()
    val photosFlow :  Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAll()
    val likedPhotosFlow : Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAllLiked()
 
     private val pagingSourceFactory= { app.database.photosDao().pagingSource() }
+
 
     @OptIn(ExperimentalPagingApi::class)
     fun pagingCuratedPhotos() : Flow<PagingData<PexelsPhotoDto>>{
@@ -60,6 +65,17 @@ class PhotosRepository(
           )
       ).flow.map { it.map { it.asDto() }}
    }
+
+    suspend fun initCollections(){
+       val collections = PexelsApiClient.apiService.getFeaturedCollections().pexelsCollection.map {
+           it.asEntity()
+       }
+        insertCollections(collections)
+    }
+
+    private suspend fun insertCollections(collections : List<PexelsCollectionItemEntity>){
+        app.database.collectionsDao().insertAll(collections)
+    }
 
    suspend fun refreshVideos(queryParam : String){
       app.database.apply {

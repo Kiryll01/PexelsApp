@@ -4,16 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.pexelsapp.Data.Entitites.PexelsCollectionItemEntity
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
 import com.example.pexelsapp.Data.Entitites.RemoteKeyEntity
 
 @Database(entities = [PexelsPhotoEntity::class,
-                     RemoteKeyEntity::class],
-    version = 4,
+                     RemoteKeyEntity::class,
+                     PexelsCollectionItemEntity::class],
+    version = 5,
     exportSchema = false)
 abstract class PexelsAppDatabase : RoomDatabase() {
     abstract fun photosDao() : PexelsPhotoDao
     abstract fun keysDao() : RemoteKeyDao
+    abstract fun collectionsDao() : CollectionsDao
     companion object{
         @Volatile
         private var INSTANCE : PexelsAppDatabase?=null

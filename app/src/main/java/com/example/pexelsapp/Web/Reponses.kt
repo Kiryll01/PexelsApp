@@ -1,6 +1,7 @@
 package com.example.pexelsapp.Web
 
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
+import com.example.pexelsapp.Data.Entitites.PexelsCollectionItemEntity
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -23,4 +24,8 @@ val pexelsCollection : List<PexelsCollectionItem>
 )
 data class PexelsCollectionItem(
     val title : String
-)
+){
+    fun asEntity() : PexelsCollectionItemEntity{
+        return PexelsCollectionItemEntity(name=title)
+    }
+}

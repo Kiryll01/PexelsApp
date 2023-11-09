@@ -1,7 +1,9 @@
 package com.example.pexelsapp.pagination
 
 import android.nfc.Tag
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.paging.*
 import androidx.room.withTransaction
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
@@ -11,6 +13,8 @@ import com.example.pexelsapp.Database.PexelsAppDatabase
 import com.example.pexelsapp.Web.PexelsApiClient
 import com.example.pexelsapp.Web.PexelsApiService
 import com.example.pexelsapp.Web.PexelsSearchResponse
+import java.time.Instant
+import kotlin.properties.Delegates
 
 private const val TAG = "REMOTE_MEDIATOR"
 @OptIn(ExperimentalPagingApi::class)
@@ -18,7 +22,12 @@ class PexelsRemoteMediator(
     private val apiCall : suspend (page : Int, perPage : Int) -> PexelsSearchResponse,
     private val db : PexelsAppDatabase
 ) : RemoteMediator<Int,PexelsPhotoEntity>() {
+
+    private var prevCall : Long = 0
     override suspend fun load(loadType: LoadType, state: PagingState<Int, PexelsPhotoEntity>): MediatorResult {
+        val currentCall = System.currentTimeMillis()
+        if(currentCall-prevCall<1000) return MediatorResult.Success(endOfPaginationReached = false)
+        prevCall=currentCall
         return try {
             val currentPage = when (loadType) {
                 LoadType.REFRESH -> {

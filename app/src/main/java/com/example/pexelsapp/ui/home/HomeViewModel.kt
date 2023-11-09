@@ -17,9 +17,7 @@ import kotlinx.coroutines.launch
 private const val TAG = "HOME_VIEW_MODEL"
 class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
 
-    private val _collections : MutableLiveData<List<String>> = MutableLiveData(arrayListOf())
-    val collections  : LiveData<List<String>> get() =_collections
-
+    val collections =repository.collectionsFlow
 
     private val _searchQuery = MutableStateFlow("cats")
     val searchQuery = _searchQuery.asSharedFlow()
@@ -31,7 +29,6 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
         .cachedIn(viewModelScope)
 
     val curatedPhotosFlow =  repository.pagingCuratedPhotos()
-
 
     private val _launchException : MutableLiveData<NetworkExceptionInfo> = MutableLiveData(NetworkExceptionInfo())
     val launchException : LiveData<NetworkExceptionInfo> = _launchException
@@ -45,6 +42,7 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
         _launchException.value=value
     }
     init {
+        Log.d(TAG,"viwModel is Created")
         initCollections()
         initVideos()
     }
@@ -74,11 +72,14 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
         }
     }
    private fun initCollections() {
-        viewModelScope.launch() {
-            _collections.value = PexelsApiClient.apiService.getFeaturedCollections()
-                .pexelsCollection
-                .map { it.title }
+        viewModelScope.launch {
+            repository.initCollections()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(TAG,"view model is destroyed")
     }
     data class NetworkExceptionInfo(
         val launchException : Boolean=false,

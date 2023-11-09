@@ -70,12 +70,14 @@ class HomeFragment : Fragment() {
         setCollections()
 
         lifecycleScope.launch {
-            viewModel.photosFlow.collect {
-                if(binding.shimmerHomeList.isVisible){
-                    binding.shimmerHomeList.stopShimmer()
-                    binding.shimmerHomeList.isVisible=false
+            viewModel.photosFlow.collect { data->
+                _binding?.let {
+                    if (it.shimmerHomeList.isVisible) {
+                        it.shimmerHomeList.stopShimmer()
+                        it.shimmerHomeList.isVisible = false
+                    }
                 }
-                adapter.submitData(it)
+                adapter.submitData(data)
             }
         }
 
@@ -174,18 +176,20 @@ class HomeFragment : Fragment() {
 
     private fun setScrollView() {
         binding.collectionsScrollView.apply {
-            viewModel.collections.observe(viewLifecycleOwner) {
-                Log.d(TAG, "$it")
-                if (it.isNotEmpty() && it.size > 6) {
-                    radioButton1.text = it[0]
-                    radioButton2.text = it[1]
-                    radioButton3.text = it[2]
-                    radioButton4.text = it[3]
-                    radioButton5.text = it[4]
-                    radioButton6.text = it[5]
-                    radioButton7.text = it[6]
+            lifecycleScope.launch {
+                viewModel.collections.collect {
+                    Log.d(TAG, "$it")
+                    if (it.isNotEmpty() && it.size > 6) {
+                        radioButton1.text = it[0].name
+                        radioButton2.text = it[1].name
+                        radioButton3.text = it[2].name
+                        radioButton4.text = it[3].name
+                        radioButton5.text = it[4].name
+                        radioButton6.text = it[5].name
+                        radioButton7.text = it[6].name
+                    }
+                    root.visibility = View.VISIBLE
                 }
-                root.visibility = View.VISIBLE
             }
         }
     }
