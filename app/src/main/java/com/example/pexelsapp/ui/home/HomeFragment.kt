@@ -52,6 +52,8 @@ class HomeFragment : Fragment() {
 
         binding.shimmerHomeList.startShimmer()
 
+        binding.shimmerCollections.startShimmer()
+
         setQueryListener()
 
         return binding.root
@@ -175,21 +177,25 @@ class HomeFragment : Fragment() {
     }
 
     private fun setScrollView() {
-        binding.collectionsScrollView.apply {
-            lifecycleScope.launch {
-                viewModel.collections.collect {
-                    Log.d(TAG, "$it")
-                    if (it.isNotEmpty() && it.size > 6) {
-                        radioButton1.text = it[0].name
-                        radioButton2.text = it[1].name
-                        radioButton3.text = it[2].name
-                        radioButton4.text = it[3].name
-                        radioButton5.text = it[4].name
-                        radioButton6.text = it[5].name
-                        radioButton7.text = it[6].name
+        lifecycleScope.launch {
+            viewModel.collections.collect {
+                    binding.collectionsScrollView.apply {
+                        Log.d(TAG, "$it")
+                        if (it.isNotEmpty() && it.size > 6) {
+                            radioButton1.text = it[0].name
+                            radioButton2.text = it[1].name
+                            radioButton3.text = it[2].name
+                            radioButton4.text = it[3].name
+                            radioButton5.text = it[4].name
+                            radioButton6.text = it[5].name
+                            radioButton7.text = it[6].name
+                        }
                     }
-                    root.visibility = View.VISIBLE
-                }
+                    if (binding.shimmerCollections.isVisible) {
+                        binding.shimmerCollections.stopShimmer()
+                        binding.shimmerCollections.isVisible = false
+                        binding.collectionsScrollView.root.isVisible=true
+                    }
             }
         }
     }

@@ -18,7 +18,8 @@ data class PexelsPhotoEntity(
     val medium : String,
     val large : String,
     val original : String,
-    var isLiked : Boolean = false
+    var isLiked : Boolean = false,
+    var queryParam : String? = null
 ){
     fun asDto() = PexelsPhotoDto(
             id,
@@ -32,6 +33,7 @@ data class PexelsPhotoEntity(
                 Pair("large",large),
                 Pair("original",original)
             ),
-        isLiked
+        isLiked,
+        queryParam
         )
 }

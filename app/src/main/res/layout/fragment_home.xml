@@ -35,7 +35,26 @@
             android:layout_marginTop="8dp"
             android:id="@+id/collections_scroll_view"
             layout="@layout/collections_view"
+            android:visibility="gone"
     />
+    <com.facebook.shimmer.ShimmerFrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/shimmer_collections"
+            tools:duration="800">
+        <LinearLayout
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <include layout="@layout/collection_shimmer_item"></include>
+            <include layout="@layout/collection_shimmer_item"></include>
+            <include layout="@layout/collection_shimmer_item"></include>
+            <include layout="@layout/collection_shimmer_item"></include>
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
     <com.facebook.shimmer.ShimmerFrameLayout
             android:paddingTop="8dp"
             android:id="@+id/shimmer_home_list"
