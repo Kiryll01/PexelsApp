@@ -1,7 +1,5 @@
 package com.example.pexelsapp.ui.home
 
-import android.animation.ValueAnimator
-import android.graphics.Interpolator
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -47,9 +45,12 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         binding.collectionsScrollView.root.isVisible = false
+
+        binding.shimmerHomeList.startShimmer()
 
         setQueryListener()
 
@@ -70,6 +71,10 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.photosFlow.collect {
+                if(binding.shimmerHomeList.isVisible){
+                    binding.shimmerHomeList.stopShimmer()
+                    binding.shimmerHomeList.isVisible=false
+                }
                 adapter.submitData(it)
             }
         }
