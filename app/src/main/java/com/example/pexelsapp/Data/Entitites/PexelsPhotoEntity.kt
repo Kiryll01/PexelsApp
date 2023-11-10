@@ -1,5 +1,6 @@
 package com.example.pexelsapp.Data.Entitites
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
@@ -19,7 +20,11 @@ data class PexelsPhotoEntity(
     val large : String,
     val original : String,
     var isLiked : Boolean = false,
-    var queryParam : String? = null
+    @ColumnInfo(
+        name = "query_param"
+    )
+    var queryParam : String? = null,
+    var isCurated : Boolean = false
 ){
     fun asDto() = PexelsPhotoDto(
             id,
@@ -34,6 +39,7 @@ data class PexelsPhotoEntity(
                 Pair("original",original)
             ),
         isLiked,
-        queryParam
+        queryParam,
+        isCurated
         )
 }

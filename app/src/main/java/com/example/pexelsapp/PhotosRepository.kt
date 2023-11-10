@@ -1,14 +1,13 @@
 package com.example.pexelsapp
 
-import android.graphics.pdf.PdfDocument.Page
 import android.util.Log
 import androidx.paging.*
+import androidx.room.util.query
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.Entitites.PexelsCollectionItemEntity
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
 import com.example.pexelsapp.Web.PexelsApiClient
 import com.example.pexelsapp.Web.PexelsApiService
-import com.example.pexelsapp.Web.PexelsCollectionItem
 import com.example.pexelsapp.pagination.PexelsRemoteMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -27,21 +26,40 @@ class PhotosRepository(
 
     private val pagingSourceFactory= { app.database.photosDao().pagingSource() }
 
+    private val pagingConfig = PagingConfig(
+        pageSize = PexelsApiService.PEXELS_PAGE_SIZE,
+        enablePlaceholders = false,
+        initialLoadSize = PexelsApiService.PEXELS_PAGE_SIZE*2,
+        prefetchDistance = 2
+    )
+    @OptIn(ExperimentalPagingApi::class)
+    fun pagingPhotosByQueryParam(queryParam: String) : Flow<PagingData<PexelsPhotoDto>>{
+        Log.d(TAG,"new query pager is created ")
+        val pagingQuerySourceFactory={app.database.photosDao().pagingPhotosByName(queryParam = queryParam)}
+
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory=pagingQuerySourceFactory,
+            remoteMediator = PexelsRemoteMediator(
+                db=app.database,
+                apiCall = {page, perPage -> PexelsApiClient.apiService.searchPhotos(queryParam,perPage, page) },
+                queryParam =  null
+            )
+        ).flow.map { it.map { it.asDto() }}
+
+    }
 
     @OptIn(ExperimentalPagingApi::class)
     fun pagingCuratedPhotos() : Flow<PagingData<PexelsPhotoDto>>{
         Log.d(TAG,"new curated photos pager")
        return Pager(
-           config = PagingConfig(
-               pageSize = PexelsApiService.PEXELS_PAGE_SIZE,
-               enablePlaceholders = false,
-               initialLoadSize = PexelsApiService.PEXELS_PAGE_SIZE*2,
-               prefetchDistance = 2
-           ),
+           config = pagingConfig,
            pagingSourceFactory=pagingSourceFactory,
            remoteMediator = PexelsRemoteMediator(
                db=app.database,
-               apiCall = {page, perPage -> PexelsApiClient.apiService.getCuratedPhotos(perPage, page) }
+               apiCall = {page, perPage -> PexelsApiClient.apiService.getCuratedPhotos(perPage, page) },
+                queryParam =  null,
+               isCuratedCall = true
            )
        ).flow.map { it.map { it.asDto() }}
     }
@@ -52,16 +70,12 @@ class PhotosRepository(
        Log.d(TAG,"new pager with param $queryParam")
 
        return Pager(
-         config = PagingConfig(
-            pageSize = PexelsApiService.PEXELS_PAGE_SIZE,
-             enablePlaceholders = false,
-             initialLoadSize = PexelsApiService.PEXELS_PAGE_SIZE*2,
-             prefetchDistance = 2
-           ),
+           pagingConfig,
           pagingSourceFactory = pagingSourceFactory,
           remoteMediator = PexelsRemoteMediator(
              db = app.database,
-             apiCall = {page, perPage -> PexelsApiClient.apiService.searchPhotos(queryParam,page=page, perPage = perPage)  }
+             apiCall = {page, perPage -> PexelsApiClient.apiService.searchPhotos(queryParam,page=page, perPage = perPage)},
+             queryParam = queryParam
           )
       ).flow.map { it.map { it.asDto() }}
    }
@@ -89,6 +103,8 @@ class PhotosRepository(
 
       }
    }
+    suspend fun isPhotosTableEmpty() = app.database.photosDao().isEmpty()
+
    suspend fun defaultPhotos(){
       app.database.apply {
        //  withContext(Dispatchers.IO){ photosDao().deleteUnliked()}

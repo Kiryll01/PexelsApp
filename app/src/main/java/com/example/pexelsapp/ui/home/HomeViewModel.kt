@@ -19,6 +19,8 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
 
     val collections =repository.collectionsFlow
 
+    var isFirstLaunch = true
+
     private val _searchQuery = MutableStateFlow("cats")
     val searchQuery = _searchQuery.asSharedFlow()
 
@@ -46,6 +48,8 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
         initCollections()
         initVideos()
     }
+
+    suspend fun isPhotosTableEmpty() = repository.isPhotosTableEmpty()
     fun photos() = repository.photosFlow
         .map {
         it.filter { !it.isLiked }

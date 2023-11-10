@@ -72,14 +72,27 @@ class HomeFragment : Fragment() {
         setCollections()
 
         lifecycleScope.launch {
-            viewModel.photosFlow.collect { data->
-                _binding?.let {
-                    if (it.shimmerHomeList.isVisible) {
-                        it.shimmerHomeList.stopShimmer()
-                        it.shimmerHomeList.isVisible = false
+            if (viewModel.isFirstLaunch) {
+                viewModel.curatedPhotosFlow.collect { data ->
+                    _binding?.let {
+                        if (it.shimmerHomeList.isVisible) {
+                            it.shimmerHomeList.stopShimmer()
+                            it.shimmerHomeList.isVisible = false
+                        }
                     }
+                    adapter.submitData(data)
                 }
-                adapter.submitData(data)
+                viewModel.isFirstLaunch = false
+            } else {
+                viewModel.photosFlow.collect { data ->
+                    _binding?.let {
+                        if (it.shimmerHomeList.isVisible) {
+                            it.shimmerHomeList.stopShimmer()
+                            it.shimmerHomeList.isVisible = false
+                        }
+                    }
+                    adapter.submitData(data)
+                }
             }
         }
 
@@ -101,6 +114,7 @@ class HomeFragment : Fragment() {
             imagesRecyclerView.layoutManager=layoutManager
         }
     }
+
 
     override fun onPause() {
         super.onPause()

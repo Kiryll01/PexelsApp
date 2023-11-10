@@ -20,7 +20,9 @@ private const val TAG = "REMOTE_MEDIATOR"
 @OptIn(ExperimentalPagingApi::class)
 class PexelsRemoteMediator(
     private val apiCall : suspend (page : Int, perPage : Int) -> PexelsSearchResponse,
-    private val db : PexelsAppDatabase
+    private val db : PexelsAppDatabase,
+    private val queryParam : String?,
+    private val isCuratedCall: Boolean = false
 ) : RemoteMediator<Int,PexelsPhotoEntity>() {
 
     private var prevCall : Long = 0
@@ -75,7 +77,12 @@ class PexelsRemoteMediator(
                     RemoteKeyEntity(it.id, prevPage = prevPage, nextPage = nextPage)
                 }
                 db.keysDao().insertAll(keys)
-                db.photosDao().insertAll(response.photos.map { it.asEntity()})
+                db.photosDao().insertAll(response.photos.map {
+                        val entity= it.asEntity()
+                        entity.queryParam=queryParam
+                        entity.isCurated=isCuratedCall
+                        entity
+                })
 
             }
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)

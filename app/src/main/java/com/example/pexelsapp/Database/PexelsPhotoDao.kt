@@ -33,4 +33,8 @@ interface PexelsPhotoDao {
     suspend fun deleteUnliked()
     @Query("SELECT * FROM photos")
     fun pagingSource() : PagingSource<Int,PexelsPhotoEntity>
+    @Query("select * from photos where query_param = :queryParam")
+    fun pagingPhotosByName(queryParam : String) : PagingSource<Int,PexelsPhotoEntity>
+    @Query("select count(*) > 0 from photos")
+    suspend fun isEmpty() : Boolean
 }

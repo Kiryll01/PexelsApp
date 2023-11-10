@@ -12,7 +12,8 @@ data class PexelsPhotoDto (
     val photographer: String,
     val src: Map<String, String>,
     var isLiked : Boolean = false,
-    var queryParam : String? = null
+    var queryParam : String? = null,
+    var isCurated : Boolean = false
 ) : java.io.Serializable{
     constructor() : this(0, 0, 0, "", "", mapOf(), false)
     fun asEntity() = PexelsPhotoEntity(
@@ -25,7 +26,8 @@ data class PexelsPhotoDto (
         src.get(PexelsSize.LARGE.sizeName)?:"",
         src.get(PexelsSize.ORIGINAL.sizeName)?:"",
         isLiked,
-        queryParam
+        queryParam,
+        isCurated
     )
 }
 
