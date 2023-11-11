@@ -81,6 +81,7 @@ class PhotosRepository(
    }
 
     suspend fun initCollections(){
+       app.database.collectionsDao().getAll()
        val collections = PexelsApiClient.apiService.getFeaturedCollections().pexelsCollection.map {
            it.asEntity()
        }

@@ -13,7 +13,31 @@ import kotlinx.coroutines.launch
 
 
 private const val TAG = "HOME_VIEW_MODEL"
-class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
+class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), ImageLoadingListener {
+    companion object {
+        var isFirstLaunch = true
+        var photoNavArg = PexelsPhotoDto()
+    }
+
+    var loadedImagesCount : Int = 0
+
+    private val _isDataReady = MutableLiveData(DataInitState())
+    val isDataReady : LiveData<DataInitState> get() = _isDataReady
+    private fun incrementImagesCount(){
+        loadedImagesCount++
+        if(loadedImagesCount>5)return
+        if(loadedImagesCount==5){
+         setRecyclerViewReady()
+        }
+    }
+    fun setScrollViewReady(){
+        _isDataReady.value=DataInitState(isRecyclerViewReady = _isDataReady.value!!.isRecyclerViewReady,
+            isScrollViewReady = true)
+    }
+    private fun setRecyclerViewReady(){
+        _isDataReady.value= DataInitState(isRecyclerViewReady = true,
+            isScrollViewReady = _isDataReady.value!!.isScrollViewReady)
+    }
 
     val collections =repository.collectionsFlow
 
@@ -48,7 +72,7 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
     }
     init {
         Log.d(TAG,"viwModel is Created")
-        initCollections()
+       if(isFirstLaunch) initCollections()
 
     }
 
@@ -73,27 +97,21 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
             )
         }
     }
-    private fun initCurated(){
-        viewModelScope.launch {
-            repository.curatedPhotos()
-        }
-    }
-   private fun initCollections() {
+    private fun initCollections() {
         viewModelScope.launch {
             repository.initCollections()
         }
     }
-
     override fun onCleared() {
         super.onCleared()
         Log.d(TAG,"view model is destroyed")
     }
-    data class NetworkExceptionInfo(
-        val launchException : Boolean=false,
-        val searchWord : String = " "
-    )
+    override fun onImageLoaded() {
+        incrementImagesCount()
+    }
+
 }
-    class HomeViewModelFactory(private val repository: PhotosRepository) : ViewModelProvider.Factory {
+class HomeViewModelFactory(private val repository: PhotosRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
@@ -102,3 +120,18 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
             throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
+data class NetworkExceptionInfo(
+    val launchException : Boolean=false,
+    val searchWord : String = " "
+)
+data class DataInitState(
+    var isRecyclerViewReady : Boolean = false,
+    var isScrollViewReady : Boolean = false,
+){
+    fun isReady() : Boolean{
+        return isRecyclerViewReady && isScrollViewReady
+    }
+}
+
+
+

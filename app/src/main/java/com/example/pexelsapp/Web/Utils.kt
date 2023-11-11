@@ -1,10 +1,18 @@
 package com.example.pexelsapp.Web
 
+import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.Nullable
 import androidx.core.net.toUri
 import coil.ImageLoader
 import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.example.pexelsapp.R
 import com.example.pexelsapp.databinding.ImageItemBinding
 import com.google.gson.Gson
@@ -30,15 +38,53 @@ import com.squareup.moshi.*
 
 
 
-fun loadImage (imgUri : String, image : ImageView) {
-  val uri = imgUri
-        ?.let { it.toUri().buildUpon().scheme("https").build() }
-    image.load(uri) {
-        placeholder(R.drawable.image_placeholder)
-        error(R.drawable.icon_download_error)
-    }
+fun loadImage(imgUri: String, image: ImageView) {
+    val requestOptions = RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
+    val uri = imgUri.toUri().buildUpon().scheme("https").build()
+    Glide.with(image.context)
+        .load(uri)
+        .apply(requestOptions)
+        .placeholder(R.drawable.image_placeholder)
+        .into(image)
 }
 
+fun loadImageWithCallback(imgUri: String,
+                                      image: ImageView,
+                                      onResourceReadyCallback : ()->Unit = {},
+                                      onResourceFailCallback : ()->Unit = {},
+                          ){
+    val requestOptions = RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
+    val uri = imgUri.toUri().buildUpon().scheme("https").build()
+    Glide.with(image.context)
+        .load(uri)
+        .apply(requestOptions)
+        .listener(object : RequestListener<Drawable>{
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                onResourceFailCallback.invoke()
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                onResourceReadyCallback.invoke()
+                return false
+            }
+
+        })
+        .placeholder(R.drawable.image_placeholder)
+        .into(image)
+
+}
 
 @Retention(AnnotationRetention.RUNTIME)
 @JsonQualifier

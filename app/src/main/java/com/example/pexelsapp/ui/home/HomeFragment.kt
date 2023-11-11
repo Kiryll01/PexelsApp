@@ -39,10 +39,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    companion object {
-        private var isFirstLaunch = true
-        private var photoNavArg = PexelsPhotoDto()
-    }
+
 
     private val viewModel by viewModels<HomeViewModel>{
         HomeViewModelFactory((activity?.application as PexelsApplication).repository)
@@ -72,30 +69,29 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setErrorLayout()
 
-        setScrollView()
-
         val adapter = createAdapter(view)
+
+        viewModel.isDataReady.observe(viewLifecycleOwner){dataState->
+            if(dataState.isReady()) {
+                onDataReady()
+            }
+        }
+
+        setScrollView()
 
         setCollections()
 
-        if (isFirstLaunch || photoNavArg.isCurated) {
+        if (HomeViewModel.isFirstLaunch || HomeViewModel.photoNavArg.isCurated) {
             lifecycleScope.launch {
                 Log.d(TAG,"curated photos coroutine is started")
-                isFirstLaunch = false
+                HomeViewModel.isFirstLaunch = false
                 viewModel.curatedPhotosFlow.collect { data ->
                     Log.d(TAG,"curated photos collector is called")
-                    _binding?.let {
-                        if (it.shimmerHomeList.isVisible) {
-                            it.shimmerHomeList.stopShimmer()
-                            it.shimmerHomeList.isVisible = false
-                        }
-                    }
                     adapter.submitData(data)
                 }
             }
@@ -108,13 +104,6 @@ class HomeFragment : Fragment() {
                 Log.d(TAG + "_PHOTOS_FLOW", "last query param : $lastQueryParam")
                 val dataByParam = data.filter { photo -> photo.queryParam == lastQueryParam }
                 Log.d(TAG + "_PHOTOS_FLOW", "filtered data : $dataByParam")
-                _binding?.let {
-                    if (it.shimmerHomeList.isVisible) {
-                        Log.d(TAG + "_PHOTOS_FLOW","stopping shimmer")
-                        it.shimmerHomeList.stopShimmer()
-                        it.shimmerHomeList.isVisible = false
-                    }
-                }
                 adapter.submitData(dataByParam)
             }
         }
@@ -137,8 +126,20 @@ class HomeFragment : Fragment() {
             imagesRecyclerView.layoutManager=layoutManager
         }
     }
-
-
+    private fun onDataReady() {
+        binding.apply {
+            Log.d(TAG, "stopping shimmers")
+            if (shimmerHomeList.isVisible) {
+                shimmerHomeList.stopShimmer()
+                shimmerHomeList.isVisible = false
+            }
+            if (shimmerCollections.isVisible) {
+                shimmerCollections.stopShimmer()
+                shimmerCollections.isVisible = false
+                collectionsScrollView.root.isVisible = true
+            }
+        }
+    }
     override fun onPause() {
         super.onPause()
         binding.collectionsScrollView.root.visibility=View.GONE
@@ -149,7 +150,6 @@ class HomeFragment : Fragment() {
         _binding = null
 
     }
-
     private fun setQueryListener() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
@@ -196,7 +196,6 @@ class HomeFragment : Fragment() {
             previousCollectionCheckedId = checkedId
         }
     }
-
     private fun secondCollectionButtonAppearance(currentButton: MaterialRadioButton) {
         currentButton.setTextColor(resources.getColor(R.color.white))
         currentButton.setBackgroundResource(R.drawable.red_round_rectangle)
@@ -208,11 +207,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun createAdapter(view: View): ImageListAdapter {
-        val adapter = ImageListAdapter {
-            photoNavArg = it
+        val adapter = ImageListAdapter (onImageClickAction = {
+            HomeViewModel.photoNavArg = it
             val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(it)
             view.findNavController().navigate(action)
-        }
+        },
+           imageLoadingListener = viewModel
+        )
        return adapter
     }
 
@@ -230,13 +231,10 @@ class HomeFragment : Fragment() {
                             radioButton5.text = it[4].name
                             radioButton6.text = it[5].name
                             radioButton7.text = it[6].name
+                            viewModel.setScrollViewReady()
                         }
                     }
-                    if (binding.shimmerCollections.isVisible) {
-                        binding.shimmerCollections.stopShimmer()
-                        binding.shimmerCollections.isVisible = false
-                        binding.collectionsScrollView.root.isVisible = true
-                    }
+
                 }
             }
         }

@@ -12,14 +12,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pexelsapp.Adapters.BookmarksListAdapter
-import com.example.pexelsapp.Adapters.ImageListAdapter
-import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.PexelsApplication
-import com.example.pexelsapp.PhotosRepository
-import com.example.pexelsapp.R
 import com.example.pexelsapp.databinding.FragmentBookmarksBinding
-import com.example.pexelsapp.databinding.FragmentHomeBinding
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class BookmarksFragment : Fragment() {
