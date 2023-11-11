@@ -24,6 +24,9 @@ data class PexelsPhotoEntity(
         name = "query_param"
     )
     var queryParam : String? = null,
+    @ColumnInfo(
+        name = "is_curated"
+    )
     var isCurated : Boolean = false
 ){
     fun asDto() = PexelsPhotoDto(

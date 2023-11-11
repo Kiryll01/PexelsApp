@@ -21,7 +21,7 @@ private const val TAG = "REMOTE_MEDIATOR"
 class PexelsRemoteMediator(
     private val apiCall : suspend (page : Int, perPage : Int) -> PexelsSearchResponse,
     private val db : PexelsAppDatabase,
-    private val queryParam : String?,
+    private val queryParam : String? = null,
     private val isCuratedCall: Boolean = false
 ) : RemoteMediator<Int,PexelsPhotoEntity>() {
 

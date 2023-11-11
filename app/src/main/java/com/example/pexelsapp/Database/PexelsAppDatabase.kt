@@ -11,7 +11,7 @@ import com.example.pexelsapp.Data.Entitites.RemoteKeyEntity
 @Database(entities = [PexelsPhotoEntity::class,
                      RemoteKeyEntity::class,
                      PexelsCollectionItemEntity::class],
-    version = 5,
+    version = 6,
     exportSchema = false)
 abstract class PexelsAppDatabase : RoomDatabase() {
     abstract fun photosDao() : PexelsPhotoDao

@@ -2,7 +2,6 @@ package com.example.pexelsapp
 
 import android.util.Log
 import androidx.paging.*
-import androidx.room.util.query
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.Entitites.PexelsCollectionItemEntity
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
@@ -24,7 +23,6 @@ class PhotosRepository(
    val photosFlow :  Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAll()
    val likedPhotosFlow : Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAllLiked()
 
-    private val pagingSourceFactory= { app.database.photosDao().pagingSource() }
 
     private val pagingConfig = PagingConfig(
         pageSize = PexelsApiService.PEXELS_PAGE_SIZE,
@@ -43,7 +41,7 @@ class PhotosRepository(
             remoteMediator = PexelsRemoteMediator(
                 db=app.database,
                 apiCall = {page, perPage -> PexelsApiClient.apiService.searchPhotos(queryParam,perPage, page) },
-                queryParam =  null
+                queryParam =  queryParam
             )
         ).flow.map { it.map { it.asDto() }}
 
@@ -52,13 +50,15 @@ class PhotosRepository(
     @OptIn(ExperimentalPagingApi::class)
     fun pagingCuratedPhotos() : Flow<PagingData<PexelsPhotoDto>>{
         Log.d(TAG,"new curated photos pager")
-       return Pager(
+
+        val pagingSourceFactory = PagingSourceFactory { app.database.photosDao().pagingPhotosIfCurated() }
+
+        return Pager(
            config = pagingConfig,
            pagingSourceFactory=pagingSourceFactory,
            remoteMediator = PexelsRemoteMediator(
                db=app.database,
                apiCall = {page, perPage -> PexelsApiClient.apiService.getCuratedPhotos(perPage, page) },
-                queryParam =  null,
                isCuratedCall = true
            )
        ).flow.map { it.map { it.asDto() }}
@@ -68,7 +68,7 @@ class PhotosRepository(
    fun pagingPhotos(queryParam: String) : Flow<PagingData<PexelsPhotoDto>>{
 
        Log.d(TAG,"new pager with param $queryParam")
-
+       val pagingSourceFactory= { app.database.photosDao().pagingSource() }
        return Pager(
            pagingConfig,
           pagingSourceFactory = pagingSourceFactory,
@@ -105,7 +105,7 @@ class PhotosRepository(
    }
     suspend fun isPhotosTableEmpty() = app.database.photosDao().isEmpty()
 
-   suspend fun defaultPhotos(){
+   suspend fun curatedPhotos(){
       app.database.apply {
        //  withContext(Dispatchers.IO){ photosDao().deleteUnliked()}
          withContext(Dispatchers.IO){

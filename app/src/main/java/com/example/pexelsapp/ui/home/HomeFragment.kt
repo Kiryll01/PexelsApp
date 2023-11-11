@@ -19,14 +19,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.paging.filter
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pexelsapp.Adapters.FooterLoadStateAdapter
 import com.example.pexelsapp.Adapters.ImageListAdapter
 import com.example.pexelsapp.Adapters.HeaderLoadStateAdapter
+import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.PexelsApplication
 import com.example.pexelsapp.R
 import com.example.pexelsapp.databinding.FragmentHomeBinding
+import com.example.pexelsapp.ui.details.DetailsFragmentArgs
 import com.google.android.material.radiobutton.MaterialRadioButton
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 private const val TAG="HOME_FRAGMENT"
@@ -34,10 +39,16 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    companion object {
+        private var isFirstLaunch = true
+        private var photoNavArg = PexelsPhotoDto()
+    }
 
     private val viewModel by viewModels<HomeViewModel>{
         HomeViewModelFactory((activity?.application as PexelsApplication).repository)
     }
+
+    private var curatedPhotosJob : Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +58,8 @@ class HomeFragment : Fragment() {
 
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        Log.d(TAG,"binding is created")
 
         binding.collectionsScrollView.root.isVisible = false
 
@@ -71,9 +84,12 @@ class HomeFragment : Fragment() {
 
         setCollections()
 
-        lifecycleScope.launch {
-            if (viewModel.isFirstLaunch) {
+        if (isFirstLaunch || photoNavArg.isCurated) {
+            lifecycleScope.launch {
+                Log.d(TAG,"curated photos coroutine is started")
+                isFirstLaunch = false
                 viewModel.curatedPhotosFlow.collect { data ->
+                    Log.d(TAG,"curated photos collector is called")
                     _binding?.let {
                         if (it.shimmerHomeList.isVisible) {
                             it.shimmerHomeList.stopShimmer()
@@ -82,17 +98,24 @@ class HomeFragment : Fragment() {
                     }
                     adapter.submitData(data)
                 }
-                viewModel.isFirstLaunch = false
-            } else {
-                viewModel.photosFlow.collect { data ->
-                    _binding?.let {
-                        if (it.shimmerHomeList.isVisible) {
-                            it.shimmerHomeList.stopShimmer()
-                            it.shimmerHomeList.isVisible = false
-                        }
+            }
+        }
+
+         lifecycleScope.launch {
+            viewModel.photosFlow.collect { data ->
+                Log.d(TAG + "_PHOTOS_FLOW", "receive data : $data")
+                val lastQueryParam = viewModel.searchQuery.replayCache.lastOrNull()
+                Log.d(TAG + "_PHOTOS_FLOW", "last query param : $lastQueryParam")
+                val dataByParam = data.filter { photo -> photo.queryParam == lastQueryParam }
+                Log.d(TAG + "_PHOTOS_FLOW", "filtered data : $dataByParam")
+                _binding?.let {
+                    if (it.shimmerHomeList.isVisible) {
+                        Log.d(TAG + "_PHOTOS_FLOW","stopping shimmer")
+                        it.shimmerHomeList.stopShimmer()
+                        it.shimmerHomeList.isVisible = false
                     }
-                    adapter.submitData(data)
                 }
+                adapter.submitData(dataByParam)
             }
         }
 
@@ -122,7 +145,9 @@ class HomeFragment : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
+        curatedPhotosJob?.cancel()
         _binding = null
+
     }
 
     private fun setQueryListener() {
@@ -184,6 +209,7 @@ class HomeFragment : Fragment() {
 
     private fun createAdapter(view: View): ImageListAdapter {
         val adapter = ImageListAdapter {
+            photoNavArg = it
             val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(it)
             view.findNavController().navigate(action)
         }
@@ -193,7 +219,8 @@ class HomeFragment : Fragment() {
     private fun setScrollView() {
         lifecycleScope.launch {
             viewModel.collections.collect {
-                    binding.collectionsScrollView.apply {
+                _binding?.let { notNullBinding->
+                    notNullBinding.collectionsScrollView.apply {
                         Log.d(TAG, "$it")
                         if (it.isNotEmpty() && it.size > 6) {
                             radioButton1.text = it[0].name
@@ -208,8 +235,9 @@ class HomeFragment : Fragment() {
                     if (binding.shimmerCollections.isVisible) {
                         binding.shimmerCollections.stopShimmer()
                         binding.shimmerCollections.isVisible = false
-                        binding.collectionsScrollView.root.isVisible=true
+                        binding.collectionsScrollView.root.isVisible = true
                     }
+                }
             }
         }
     }

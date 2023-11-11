@@ -62,15 +62,8 @@ class DetailsFragment : Fragment() {
         val imageUrl= photo?.src?.get(PexelsSize.ORIGINAL.sizeName) ?: " "
 
         binding.backNavigation.setOnClickListener{
-//            val navController=findNavController()
-//            val previousFragment=navController.previousBackStackEntry
-//            val previousFragmentId=previousFragment?.destination?.id
-//            previousFragmentId?.let {
-//
-//            }
-
-            val action = DetailsFragmentDirections.actionDetailsFragmentToNavigationHome()
-            view.findNavController().navigate(action)
+                val action = DetailsFragmentDirections.actionDetailsFragmentToNavigationHome()
+                view.findNavController().navigate(action)
         }
 
         photo?.let{
@@ -89,9 +82,11 @@ class DetailsFragment : Fragment() {
                         binding.relativeLayout.visibility=View.GONE
                         binding.image.visibility=View.GONE
                         binding.detailsExploreLayout.explore.setOnClickListener{
-                            val action=DetailsFragmentDirections.actionDetailsFragmentToNavigationHome()
-                            findNavController().navigate(action)
-                        }
+                            photo?.let {
+                                val action = DetailsFragmentDirections.actionDetailsFragmentToNavigationHome()
+                                findNavController().navigate(action)
+                            }
+                            }
                               },)
                 .build()
             imageLoader.enqueue(request)

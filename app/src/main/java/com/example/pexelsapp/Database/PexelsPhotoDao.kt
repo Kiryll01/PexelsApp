@@ -35,6 +35,8 @@ interface PexelsPhotoDao {
     fun pagingSource() : PagingSource<Int,PexelsPhotoEntity>
     @Query("select * from photos where query_param = :queryParam")
     fun pagingPhotosByName(queryParam : String) : PagingSource<Int,PexelsPhotoEntity>
+    @Query("select * from photos where is_curated = true")
+    fun pagingPhotosIfCurated() : PagingSource<Int,PexelsPhotoEntity>
     @Query("select count(*) > 0 from photos")
     suspend fun isEmpty() : Boolean
 }

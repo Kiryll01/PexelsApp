@@ -6,8 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.PhotosRepository
-import com.example.pexelsapp.Web.PexelsApiClient
-import com.google.android.material.tabs.TabLayout.TabGravity
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -19,9 +17,8 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
 
     val collections =repository.collectionsFlow
 
-    var isFirstLaunch = true
-
-    private val _searchQuery = MutableStateFlow("cats")
+    private var _searchQuery : MutableSharedFlow<String> = MutableSharedFlow(replay = 50,
+        extraBufferCapacity = 64)
     val searchQuery = _searchQuery.asSharedFlow()
 
     val photosFlow : Flow<PagingData<PexelsPhotoDto>> = _searchQuery
@@ -30,13 +27,19 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
             repository.pagingPhotos(it) }
         .cachedIn(viewModelScope)
 
+    val photosFlowByQueryParam : Flow<PagingData<PexelsPhotoDto>> = _searchQuery
+        .flatMapLatest {
+            Log.d(TAG,"new photos flow by param was created ")
+            repository.pagingPhotosByQueryParam(it)
+        }
+        .cachedIn(viewModelScope)
     val curatedPhotosFlow =  repository.pagingCuratedPhotos()
 
     private val _launchException : MutableLiveData<NetworkExceptionInfo> = MutableLiveData(NetworkExceptionInfo())
     val launchException : LiveData<NetworkExceptionInfo> = _launchException
 
     fun setQuery(query : String){
-        _searchQuery.value=query
+        _searchQuery.tryEmit(query)
         Log.d(TAG, "$query emit")
     }
 
@@ -46,7 +49,7 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
     init {
         Log.d(TAG,"viwModel is Created")
         initCollections()
-        initVideos()
+
     }
 
     suspend fun isPhotosTableEmpty() = repository.isPhotosTableEmpty()
@@ -70,9 +73,9 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel() {
             )
         }
     }
-    private fun initVideos(){
+    private fun initCurated(){
         viewModelScope.launch {
-            repository.defaultPhotos()
+            repository.curatedPhotos()
         }
     }
    private fun initCollections() {

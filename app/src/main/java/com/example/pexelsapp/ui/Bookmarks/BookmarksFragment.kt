@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pexelsapp.Adapters.BookmarksListAdapter
 import com.example.pexelsapp.Adapters.ImageListAdapter
+import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.PexelsApplication
 import com.example.pexelsapp.PhotosRepository
 import com.example.pexelsapp.R
@@ -27,7 +28,7 @@ class BookmarksFragment : Fragment() {
     private val binding get() = _binding!!
 
     companion object{
-        private val ifFirstLaunch : Boolean = true
+        private var isFirstLaunch : Boolean = true
     }
 
     private val viewModel : BookmarksViewModel by viewModels {
