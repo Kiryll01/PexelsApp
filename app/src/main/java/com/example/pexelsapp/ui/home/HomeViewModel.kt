@@ -25,18 +25,22 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), Im
     val isDataReady : LiveData<DataInitState> get() = _isDataReady
     private fun incrementImagesCount(){
         loadedImagesCount++
+        Log.d(TAG,"loadedImages : $loadedImagesCount")
         if(loadedImagesCount>5)return
         if(loadedImagesCount==5){
          setRecyclerViewReady()
         }
     }
     fun setScrollViewReady(){
-        _isDataReady.value=DataInitState(isRecyclerViewReady = _isDataReady.value!!.isRecyclerViewReady,
+        val isRecyclerViewReady= _isDataReady.value!!.isRecyclerViewReady
+
+        _isDataReady.value=DataInitState(isRecyclerViewReady = isRecyclerViewReady,
             isScrollViewReady = true)
     }
     private fun setRecyclerViewReady(){
+       val isScrollViewReady= _isDataReady.value!!.isScrollViewReady
         _isDataReady.value= DataInitState(isRecyclerViewReady = true,
-            isScrollViewReady = _isDataReady.value!!.isScrollViewReady)
+            isScrollViewReady =isScrollViewReady )
     }
 
     val collections =repository.collectionsFlow
@@ -73,6 +77,7 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), Im
     init {
         Log.d(TAG,"viwModel is Created")
        if(isFirstLaunch) initCollections()
+        setRecyclerViewReady()
 
     }
 
@@ -107,6 +112,7 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), Im
         Log.d(TAG,"view model is destroyed")
     }
     override fun onImageLoaded() {
+        Log.d(TAG, "loading listener is called")
         incrementImagesCount()
     }
 

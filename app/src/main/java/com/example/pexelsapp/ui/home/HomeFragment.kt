@@ -58,8 +58,6 @@ class HomeFragment : Fragment() {
 
         Log.d(TAG,"binding is created")
 
-        binding.collectionsScrollView.root.isVisible = false
-
         binding.shimmerHomeList.startShimmer()
 
         binding.shimmerCollections.startShimmer()
@@ -77,7 +75,9 @@ class HomeFragment : Fragment() {
         val adapter = createAdapter(view)
 
         viewModel.isDataReady.observe(viewLifecycleOwner){dataState->
+            Log.d(TAG,"data state : $dataState")
             if(dataState.isReady()) {
+                Log.d(TAG,"data is ready")
                 onDataReady()
             }
         }
@@ -136,8 +136,8 @@ class HomeFragment : Fragment() {
             if (shimmerCollections.isVisible) {
                 shimmerCollections.stopShimmer()
                 shimmerCollections.isVisible = false
-                collectionsScrollView.root.isVisible = true
             }
+            collectionsScrollView.root.isVisible=true
         }
     }
     override fun onPause() {

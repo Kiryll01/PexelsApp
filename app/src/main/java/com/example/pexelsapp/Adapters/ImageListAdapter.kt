@@ -34,7 +34,7 @@ class ImageListAdapter (private val onImageClickAction : (PexelsPhotoDto)->Unit,
             binding.apply {
                 photo.src[PexelsSize.LARGE.sizeName]?.let {
                     loadImageWithCallback(imgUri = it,image=binding.image,
-                        onResourceFailCallback = {
+                        onResourceReadyCallback = {
                         onImageLoadedAction
                     })
                 }
@@ -58,8 +58,7 @@ class ImageListAdapter (private val onImageClickAction : (PexelsPhotoDto)->Unit,
         viewHolder.itemView.setOnClickListener {
             val position = viewHolder.bindingAdapterPosition
             val item = getItem(position)
-            if(item != null) onImageClickAction(item)
-            else viewHolder.setPlaceholder()
+            if(item != null) onImageClickAction(item) else viewHolder.setPlaceholder()
         }
     return viewHolder
 }
