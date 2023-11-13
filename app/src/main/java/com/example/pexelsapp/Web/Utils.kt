@@ -78,7 +78,6 @@ fun loadImageWithCallback(imgUri: String,
                 dataSource: DataSource?,
                 isFirstResource: Boolean
             ): Boolean {
-                Log.d("image_binding", "src is ready")
                 onResourceReadyCallback.invoke()
                 return false
             }

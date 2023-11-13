@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 
 
 private const val TAG = "HOME_VIEW_MODEL"
+private const val IMAGES_TO_LOAD_BEFORE_START = 1
+
 class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), ImageLoadingListener {
     companion object {
         var isFirstLaunch = true
@@ -26,9 +28,10 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), Im
     private fun incrementImagesCount(){
         loadedImagesCount++
         Log.d(TAG,"loadedImages : $loadedImagesCount")
-        if(loadedImagesCount>5)return
-        if(loadedImagesCount==5){
+        if(loadedImagesCount > IMAGES_TO_LOAD_BEFORE_START)return
+        if(loadedImagesCount == IMAGES_TO_LOAD_BEFORE_START){
          setRecyclerViewReady()
+            Log.d(TAG,"recycler view is ready")
         }
     }
     fun setScrollViewReady(){
