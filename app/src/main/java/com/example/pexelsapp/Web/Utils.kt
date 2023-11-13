@@ -85,7 +85,6 @@ fun loadImageWithCallback(imgUri: String,
         })
         .apply(requestOptions)
         .into(image)
-
 }
 
 @Retention(AnnotationRetention.RUNTIME)

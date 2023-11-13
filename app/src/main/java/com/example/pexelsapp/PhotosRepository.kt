@@ -27,7 +27,7 @@ class PhotosRepository(
     private val pagingConfig = PagingConfig(
         pageSize = PexelsApiService.PEXELS_PAGE_SIZE,
         enablePlaceholders = false,
-        initialLoadSize = PexelsApiService.PEXELS_PAGE_SIZE*2,
+        initialLoadSize = PexelsApiService.PEXELS_PAGE_SIZE*3,
         prefetchDistance = 2
     )
     @OptIn(ExperimentalPagingApi::class)
