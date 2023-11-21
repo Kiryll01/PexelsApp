@@ -1,4 +1,4 @@
-package com.example.pexelsapp.Adapters
+package com.example.pexelsapp.ui.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.example.pexelsapp.databinding.FooterLoadStateItemBinding
 class LoadStateFooterViewHolder(
     private val retry : suspend ()->Unit,
     binding : FooterLoadStateItemBinding
-) : AbstractViewHolder<LoadState,FooterLoadStateItemBinding>(binding) {
+) : AbstractViewHolder<LoadState, FooterLoadStateItemBinding>(binding) {
 
     val progressBar = binding.linearProgressBar
 

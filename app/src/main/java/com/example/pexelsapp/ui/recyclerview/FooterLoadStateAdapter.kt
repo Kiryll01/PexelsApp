@@ -1,4 +1,4 @@
-package com.example.pexelsapp.Adapters
+package com.example.pexelsapp.ui.recyclerview
 
 import android.animation.ObjectAnimator
 import android.util.Log
@@ -18,6 +18,6 @@ class FooterLoadStateAdapter(private val retry: suspend () -> Unit) : LoadStateA
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateFooterViewHolder {
-        return LoadStateFooterViewHolder.create(parent,retry)
+        return LoadStateFooterViewHolder.create(parent, retry)
     }
 }

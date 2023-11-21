@@ -1,7 +1,5 @@
-package com.example.pexelsapp.ui.home
+package com.example.pexelsapp.ui.Fragments
 
-import android.animation.AnimatorSet
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,11 +22,13 @@ import androidx.navigation.findNavController
 import androidx.paging.filter
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.pexelsapp.Adapters.FooterLoadStateAdapter
-import com.example.pexelsapp.Adapters.ImageListAdapter
+import com.example.pexelsapp.ui.recyclerview.FooterLoadStateAdapter
+import com.example.pexelsapp.ui.recyclerview.ImageListAdapter
 import com.example.pexelsapp.PexelsApplication
 import com.example.pexelsapp.R
 import com.example.pexelsapp.databinding.FragmentHomeBinding
+import com.example.pexelsapp.ui.ViewModels.HomeViewModel
+import com.example.pexelsapp.ui.ViewModels.HomeViewModelFactory
 import com.google.android.material.radiobutton.MaterialRadioButton
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -96,6 +96,9 @@ class HomeFragment : Fragment() {
 
         var curatedPhotosJob : Job?= null
 
+        Log.d(TAG,"isFirstLaunch ${HomeViewModel.isFirstLaunch}")
+
+        Log.d(TAG,"isCurated ${HomeViewModel.photoNavArg.isCurated}")
         if (HomeViewModel.isFirstLaunch || HomeViewModel.photoNavArg.isCurated) {
             curatedPhotosJob=lifecycleScope.launch {
                 Log.d(TAG,"curated photos coroutine is started")
@@ -126,7 +129,8 @@ class HomeFragment : Fragment() {
                 val lastQuery= viewModel.searchQuery.replayCache.lastOrNull()
                 if(lastQuery!=null)viewModel.setQuery(lastQuery)
                 // TODO : else submit curated photos
-            }))
+            })
+        )
 
         binding.apply {
             imagesRecyclerView.adapter = concatAdapter
@@ -231,20 +235,20 @@ class HomeFragment : Fragment() {
                                         toTextColor : Int,
                                          animationDuration : Long = 250
                                         ){
-        val tintColorAnimation = ValueAnimator.ofArgb(fromButtonTintColor, toButtonTintColor)
-        tintColorAnimation.addUpdateListener { animator->
-            button.background.setTint(animator.animatedValue as Int)
-        }
-
-        val textColorAnimation = ValueAnimator.ofArgb(fromTextColor,toTextColor)
-        tintColorAnimation.addUpdateListener { animator->
-            button.setTextColor(animator.animatedValue as Int)
-        }
-
-        val animatorSet = AnimatorSet()
-        animatorSet.playTogether(tintColorAnimation, textColorAnimation)
-        animatorSet.duration=animationDuration
-        animatorSet.start()
+//        val tintColorAnimation = ValueAnimator.ofArgb(fromButtonTintColor, toButtonTintColor)
+//        tintColorAnimation.addUpdateListener { animator->
+//            button.background.setTint(animator.animatedValue as Int)
+//        }
+//
+//        val textColorAnimation = ValueAnimator.ofArgb(fromTextColor,toTextColor)
+//        tintColorAnimation.addUpdateListener { animator->
+//            button.setTextColor(animator.animatedValue as Int)
+//        }
+//
+//        val animatorSet = AnimatorSet()
+//        animatorSet.playTogether(tintColorAnimation, textColorAnimation)
+//        animatorSet.duration=animationDuration
+//        animatorSet.start()
 
     }
     private fun secondCollectionButtonAppearance(button: Button) {
@@ -272,7 +276,7 @@ class HomeFragment : Fragment() {
         val adapter = ImageListAdapter (onImageClickAction = {
             HomeViewModel.photoNavArg = it
             Log.d(TAG,"phototoNavArg : $it")
-            val action = HomeFragmentDirections.actionNavigationHomeToDetailsFragment(it)
+            val action = com.example.pexelsapp.ui.home.HomeFragmentDirections.actionNavigationHomeToDetailsFragment(it)
             view.findNavController().navigate(action)
         },
            imageLoadingListener = viewModel
@@ -342,10 +346,12 @@ class HomeFragment : Fragment() {
         binding.shimmerHomeList.startShimmer()
     }
     private fun stopImagesShimmer(){
+        _binding?.let {
         if(binding.shimmerHomeList.isVisible) {
             binding.shimmerHomeList.isVisible = false
             binding.shimmerHomeList.stopShimmer()
             layoutManager.scrollToPosition(0)
         }
+    }
     }
 }

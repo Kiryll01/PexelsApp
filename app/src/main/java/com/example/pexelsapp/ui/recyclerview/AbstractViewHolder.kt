@@ -1,6 +1,5 @@
-package com.example.pexelsapp.Adapters
+package com.example.pexelsapp.ui.recyclerview
 
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 

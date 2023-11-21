@@ -3,7 +3,7 @@
              android:layout_width="wrap_content"
              android:layout_height="match_parent">
     <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/radio_button_1"
+            android:id="@+id/shimmer_collection_item"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
 

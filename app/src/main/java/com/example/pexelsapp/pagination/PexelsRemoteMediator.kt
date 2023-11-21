@@ -70,7 +70,7 @@ class PexelsRemoteMediator(
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     //TODO : just for test deleting all
-                    db.photosDao().deleteAll()
+                    db.photosDao().deleteUnliked()
                     db.keysDao().deleteAll()
                 }
                 val keys = response.photos.map {

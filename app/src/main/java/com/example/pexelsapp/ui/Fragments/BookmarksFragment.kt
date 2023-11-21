@@ -1,6 +1,5 @@
-package com.example.pexelsapp.ui.Bookmarks
+package com.example.pexelsapp.ui.Fragments
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,9 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.pexelsapp.Adapters.BookmarksListAdapter
+import com.example.pexelsapp.ui.recyclerview.BookmarksListAdapter
 import com.example.pexelsapp.PexelsApplication
 import com.example.pexelsapp.databinding.FragmentBookmarksBinding
+import com.example.pexelsapp.ui.ViewModels.BookmarksViewModel
+import com.example.pexelsapp.ui.ViewModels.BookmarksViewModelFactory
 import kotlinx.coroutines.launch
 
 class BookmarksFragment : Fragment() {
@@ -44,11 +45,15 @@ class BookmarksFragment : Fragment() {
             bookmarksExploreLayout.root.visibility=View.VISIBLE
             binding.bookmarksRecyclerView.visibility=View.GONE
             bookmarksExploreLayout.explore.setOnClickListener{
-                val action=BookmarksFragmentDirections.actionNavigationBookmarksToNavigationHome()
+                val action=
+                   BookmarksFragmentDirections.actionNavigationBookmarksToNavigationHome()
                 findNavController().navigate(action)
             }
             val adapter = BookmarksListAdapter {
-                val action = BookmarksFragmentDirections.actionBookmarksFragmentToDetailsFragment(it)
+                val action =
+                    BookmarksFragmentDirections.actionBookmarksFragmentToDetailsFragment(
+                        it
+                    )
                 view.findNavController().navigate(action)
             }
             val layoutManager = StaggeredGridLayoutManager(

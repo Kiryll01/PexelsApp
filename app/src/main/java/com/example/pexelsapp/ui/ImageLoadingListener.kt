@@ -1,4 +1,4 @@
-package com.example.pexelsapp.ui.home
+package com.example.pexelsapp.ui
 
 interface ImageLoadingListener {
     fun onImageLoaded()

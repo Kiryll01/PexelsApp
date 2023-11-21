@@ -13,12 +13,14 @@ interface PexelsPhotoDao {
     suspend fun insert(photo: PexelsPhotoEntity)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(photos : List<PexelsPhotoEntity>)
-    @Query("delete from photos")
-    suspend fun deleteAll()
+//    @Query("delete from photos")
+//    suspend fun deleteAll()
     @Update
     suspend fun update(photo: PexelsPhotoEntity)
     @Delete
     suspend fun delete(photo: PexelsPhotoEntity)
+    @Query("select * from photos where id = :id limit 1")
+    suspend fun getById(id : Int) : PexelsPhotoEntity
     suspend fun refresh(photos : List<PexelsPhotoEntity>){
         deleteUnliked()
         insertAll(photos)

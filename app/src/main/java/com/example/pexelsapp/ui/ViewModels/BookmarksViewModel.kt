@@ -1,9 +1,8 @@
-package com.example.pexelsapp.ui.Bookmarks
+package com.example.pexelsapp.ui.ViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.pexelsapp.PhotosRepository
-import com.example.pexelsapp.ui.details.DetailsViewModel
 import kotlinx.coroutines.flow.map
 
 class BookmarksViewModel(private val repository : PhotosRepository) : ViewModel() {

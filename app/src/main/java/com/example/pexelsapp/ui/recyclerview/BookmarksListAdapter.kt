@@ -1,17 +1,17 @@
-package com.example.pexelsapp.Adapters
+package com.example.pexelsapp.ui.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
-import com.example.pexelsapp.Data.PexelsSize
+import com.example.pexelsapp.Data.Enums.PexelsSize
 import com.example.pexelsapp.Web.loadImage
 import com.example.pexelsapp.databinding.BookmarksItemBinding
 
 
 class BookmarksListAdapter(private val onImageClickAction : (PexelsPhotoDto)->Unit)
-    :ListAdapter<PexelsPhotoDto,BookmarksListAdapter.BookmarksViewHolder>(DiffCallback) {
+    :ListAdapter<PexelsPhotoDto, BookmarksListAdapter.BookmarksViewHolder>(DiffCallback) {
     companion object DiffCallback : DiffUtil.ItemCallback<PexelsPhotoDto>() {
         override fun areItemsTheSame(oldItem: PexelsPhotoDto, newItem: PexelsPhotoDto): Boolean {
             return oldItem == newItem

@@ -1,4 +1,4 @@
-package com.example.pexelsapp.Data
+package com.example.pexelsapp.Data.Enums
 
 enum class PexelsSize(val sizeName:String) {
     TINY("tiny"),

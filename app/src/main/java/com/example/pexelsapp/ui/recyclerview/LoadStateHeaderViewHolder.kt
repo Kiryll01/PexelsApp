@@ -1,10 +1,9 @@
-package com.example.pexelsapp.Adapters
+package com.example.pexelsapp.ui.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.RecyclerView
 import com.example.pexelsapp.R
 import com.example.pexelsapp.databinding.HeaderLoadStateItemBinding
 
@@ -13,7 +12,7 @@ import com.example.pexelsapp.databinding.HeaderLoadStateItemBinding
 class LoadStateHeaderViewHolder (
     binding: HeaderLoadStateItemBinding,
     private val retry : () ->Unit
-) : AbstractViewHolder<LoadState,HeaderLoadStateItemBinding>(binding){
+) : AbstractViewHolder<LoadState, HeaderLoadStateItemBinding>(binding){
 
     init {
         binding.retry.setOnClickListener{

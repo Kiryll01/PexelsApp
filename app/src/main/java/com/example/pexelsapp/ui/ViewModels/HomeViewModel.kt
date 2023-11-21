@@ -1,4 +1,4 @@
-package com.example.pexelsapp.ui.home
+package com.example.pexelsapp.ui.ViewModels
 
 import android.util.Log
 import androidx.lifecycle.*
@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.PhotosRepository
+import com.example.pexelsapp.ui.ImageLoadingListener
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -37,7 +38,7 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), Im
     fun setScrollViewReady(){
         val isRecyclerViewReady= _isDataReady.value!!.isRecyclerViewReady
 
-        _isDataReady.value=DataInitState(isRecyclerViewReady = isRecyclerViewReady,
+        _isDataReady.value= DataInitState(isRecyclerViewReady = isRecyclerViewReady,
             isScrollViewReady = true)
     }
     private fun setRecyclerViewReady(){
@@ -54,17 +55,12 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), Im
 
     val photosFlow : Flow<PagingData<PexelsPhotoDto>> = _searchQuery
         .flatMapLatest {
+            Log.d(TAG,"query name from photos flow $it")
             Log.d(TAG,"new photosFlow has been created ")
             repository.pagingPhotos(it) }
         .cachedIn(viewModelScope)
 
-    val photosFlowByQueryParam : Flow<PagingData<PexelsPhotoDto>> = _searchQuery
-        .flatMapLatest {
-            Log.d(TAG,"new photos flow by param was created ")
-            repository.pagingPhotosByQueryParam(it)
-        }
-        .cachedIn(viewModelScope)
-    val curatedPhotosFlow =  repository.pagingCuratedPhotos()
+    val curatedPhotosFlow = repository.pagingCuratedPhotos()
 
     private val _launchException : MutableLiveData<NetworkExceptionInfo> = MutableLiveData(NetworkExceptionInfo())
     val launchException : LiveData<NetworkExceptionInfo> = _launchException
@@ -74,11 +70,8 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), Im
         Log.d(TAG, "$query emit")
     }
 
-    fun setLaunchException(value : NetworkExceptionInfo){
-        _launchException.value=value
-    }
     init {
-        Log.d(TAG,"viwModel is Created")
+        Log.d(TAG,"viewModel is Created")
        if(isFirstLaunch) initCollections()
         setRecyclerViewReady()
 
@@ -99,7 +92,7 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), Im
             println("Caught $exception")
         }
         return viewModelScope.launch(handler) { repository.refreshVideos(queryParamName)
-            _launchException.value=NetworkExceptionInfo(
+            _launchException.value= NetworkExceptionInfo(
                 launchException = false,
                 searchWord = queryParamName
             )

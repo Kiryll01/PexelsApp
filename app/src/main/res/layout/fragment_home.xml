@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.HomeFragment"
+        tools:context=".ui.Fragments.HomeFragment"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:paddingTop="16dp"
@@ -87,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/seco_column">
+                    android:id="@+id/second_column">
                 <include layout="@layout/image_item_second_shimmer"></include>
                 <include layout="@layout/image_item_first_shimmer"></include>
                 <include layout="@layout/image_item_first_shimmer"></include>

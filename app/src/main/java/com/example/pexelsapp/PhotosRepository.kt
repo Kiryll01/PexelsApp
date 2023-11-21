@@ -122,4 +122,6 @@ class PhotosRepository(
    suspend fun deletePhotoById(id : Int){
       app.database.photosDao().deleteById(id)
    }
+    suspend fun getPhotoById(id : Int) : PexelsPhotoEntity = app.database.photosDao().getById(id)
+
 }

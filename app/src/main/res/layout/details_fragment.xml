@@ -4,14 +4,15 @@
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context="ui.details.DetailsFragment"
+        tools:context=".ui.Fragments.DetailsFragment"
         android:padding="24dp">
 
     <include
             android:visibility="gone"
             layout="@layout/details_explore"
             android:id="@+id/details_explore_layout"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/details_fragment_title"/>
 
     <ImageButton

@@ -1,4 +1,4 @@
-package com.example.pexelsapp.Adapters
+package com.example.pexelsapp.ui.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,17 +6,18 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
-import com.example.pexelsapp.Data.PexelsSize
+import com.example.pexelsapp.Data.Enums.PexelsSize
 import com.example.pexelsapp.R
 import com.example.pexelsapp.Web.loadImageWithCallback
 import com.example.pexelsapp.databinding.ImageItemBinding
-import com.example.pexelsapp.ui.home.ImageLoadingListener
+import com.example.pexelsapp.ui.ImageLoadingListener
 
 
 private const val TAG="IMAGE_LIST_ADAPTER"
 class ImageListAdapter (private val onImageClickAction : (PexelsPhotoDto)->Unit,
-    private val imageLoadingListener: ImageLoadingListener)
-    : PagingDataAdapter<PexelsPhotoDto,ImageListAdapter.ImageViewHolder>(DiffCallback) {
+    private val imageLoadingListener: ImageLoadingListener
+)
+    : PagingDataAdapter<PexelsPhotoDto, ImageListAdapter.ImageViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<PexelsPhotoDto>() {
         override fun areItemsTheSame(oldItem: PexelsPhotoDto, newItem: PexelsPhotoDto): Boolean {

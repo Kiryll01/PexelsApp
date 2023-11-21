@@ -1,8 +1,7 @@
-package com.example.pexelsapp.Adapters
+package com.example.pexelsapp.ui.recyclerview
 
 import android.util.Log
 import android.view.ViewGroup
-import android.widget.HeaderViewListAdapter
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 

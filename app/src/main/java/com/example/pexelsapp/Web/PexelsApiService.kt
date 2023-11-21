@@ -1,5 +1,7 @@
 package com.example.pexelsapp.Web
 
+import com.example.pexelsapp.Data.Responses.PexelsCollectionsResponse
+import com.example.pexelsapp.Data.Responses.PexelsSearchResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient

@@ -29,6 +29,25 @@ data class PexelsPhotoEntity(
     )
     var isCurated : Boolean = false
 ){
+  companion object {
+      fun empty(): PexelsPhotoEntity {
+          return PexelsPhotoEntity(
+              id = 0,
+              width = 0,
+              height = 0,
+              url = "",
+              photographer = "",
+              tiny = "",
+              small = "",
+              medium = "",
+              large = "",
+              original = "",
+              isLiked = false,
+              queryParam = "",
+              isCurated = false
+          )
+      }
+  }
     fun asDto() = PexelsPhotoDto(
             id,
             width,
