@@ -9,12 +9,11 @@ import androidx.room.withTransaction
 import com.example.pexelsapp.Data.Dtos.PexelsPhotoDto
 import com.example.pexelsapp.Data.Entitites.PexelsPhotoEntity
 import com.example.pexelsapp.Data.Entitites.RemoteKeyEntity
+import com.example.pexelsapp.Data.Responses.PexelsSearchResponse
 import com.example.pexelsapp.Database.PexelsAppDatabase
-import com.example.pexelsapp.Web.PexelsApiClient
+
 import com.example.pexelsapp.Web.PexelsApiService
-import com.example.pexelsapp.Web.PexelsSearchResponse
-import java.time.Instant
-import kotlin.properties.Delegates
+
 
 private const val TAG = "REMOTE_MEDIATOR"
 @OptIn(ExperimentalPagingApi::class)

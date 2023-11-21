@@ -276,7 +276,7 @@ class HomeFragment : Fragment() {
         val adapter = ImageListAdapter (onImageClickAction = {
             HomeViewModel.photoNavArg = it
             Log.d(TAG,"phototoNavArg : $it")
-            val action = com.example.pexelsapp.ui.home.HomeFragmentDirections.actionNavigationHomeToDetailsFragment(it)
+            val action =HomeFragmentDirections.actionNavigationHomeToDetailsFragment(it)
             view.findNavController().navigate(action)
         },
            imageLoadingListener = viewModel
