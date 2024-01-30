@@ -22,7 +22,8 @@
             android:background="@drawable/back_button_background"
             android:padding="8dp"
             android:foreground="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="8dp"
             android:id="@+id/back_navigation"/>
 

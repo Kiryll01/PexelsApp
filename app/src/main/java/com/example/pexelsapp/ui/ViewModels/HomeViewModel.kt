@@ -91,7 +91,7 @@ class HomeViewModel(private val repository: PhotosRepository ) : ViewModel(), Im
             )
             println("Caught $exception")
         }
-        return viewModelScope.launch(handler) { repository.refreshVideos(queryParamName)
+        return viewModelScope.launch(handler) { repository.refreshPhotos(queryParamName)
             _launchException.value= NetworkExceptionInfo(
                 launchException = false,
                 searchWord = queryParamName

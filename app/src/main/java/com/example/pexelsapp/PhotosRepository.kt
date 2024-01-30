@@ -23,29 +23,12 @@ class PhotosRepository(
    val photosFlow :  Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAll()
    val likedPhotosFlow : Flow<List<PexelsPhotoEntity>> = app.database.photosDao().getAllLiked()
 
-
     private val pagingConfig = PagingConfig(
         pageSize = PexelsApiService.PEXELS_PAGE_SIZE,
         enablePlaceholders = false,
         initialLoadSize = PexelsApiService.PEXELS_PAGE_SIZE*3,
         prefetchDistance = 2
     )
-    @OptIn(ExperimentalPagingApi::class)
-    fun pagingPhotosByQueryParam(queryParam: String) : Flow<PagingData<PexelsPhotoDto>>{
-        Log.d(TAG,"new query pager is created ")
-        val pagingQuerySourceFactory={app.database.photosDao().pagingPhotosByName(queryParam = queryParam)}
-
-        return Pager(
-            config = pagingConfig,
-            pagingSourceFactory=pagingQuerySourceFactory,
-            remoteMediator = PexelsRemoteMediator(
-                db=app.database,
-                apiCall = {page, perPage -> PexelsApiClient.apiService.searchPhotos(queryParam,perPage, page) },
-                queryParam =  queryParam
-            )
-        ).flow.map { it.map { it.asDto() }}
-
-    }
 
     @OptIn(ExperimentalPagingApi::class)
     fun pagingCuratedPhotos() : Flow<PagingData<PexelsPhotoDto>>{
@@ -92,7 +75,7 @@ class PhotosRepository(
         app.database.collectionsDao().insertAll(collections)
     }
 
-   suspend fun refreshVideos(queryParam : String){
+   suspend fun refreshPhotos(queryParam : String){
       app.database.apply {
          withContext(Dispatchers.IO){ photosDao().deleteUnliked()}
          withContext(Dispatchers.IO){
@@ -106,21 +89,8 @@ class PhotosRepository(
    }
     suspend fun isPhotosTableEmpty() = app.database.photosDao().isEmpty()
 
-   suspend fun curatedPhotos(){
-      app.database.apply {
-       //  withContext(Dispatchers.IO){ photosDao().deleteUnliked()}
-         withContext(Dispatchers.IO){
-            val photos=PexelsApiClient.apiService.getCuratedPhotos()
-               .photos.map { it.asEntity() }
-            photosDao().insertAll(photos)
-         }
-      }
-   }
    suspend fun insertPhoto(photo : PexelsPhotoEntity){
       app.database.photosDao().insert(photo)
-   }
-   suspend fun deletePhotoById(id : Int){
-      app.database.photosDao().deleteById(id)
    }
     suspend fun getPhotoById(id : Int) : PexelsPhotoEntity = app.database.photosDao().getById(id)
 
